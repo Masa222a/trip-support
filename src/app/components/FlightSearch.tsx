@@ -63,6 +63,7 @@ export default function FlightSearch() {
                   <Label htmlFor="departure-date" className="text-gray-700">出発日</Label>
                   <Popover>
                     <PopoverTrigger asChild>
+                      {/* departureDateがからでなければ日付を表示 */}
                       <Button variant="outline" className="w-full mt-1 text-left">
                         日付を選択
                       </Button>
@@ -73,7 +74,7 @@ export default function FlightSearch() {
                         selected={departureDate}
                         onSelect={setDepartureDate}
                         initialFocus
-                        disabled={(date) => date < new Date()}
+                        disabled={(departureDate) => departureDate < new Date()}
                         className="rounded-md border" />
                     </PopoverContent>
                   </Popover>
@@ -93,8 +94,9 @@ export default function FlightSearch() {
                           mode="single"
                           selected={returnDate}
                           onSelect={setReturnDate} 
-                          initialFocus 
-                          disabled={(date) => date < new Date() || (departureDate && date < departureDate)}
+                          initialFocus
+                          disabled={departureDate && returnDate && returnDate < new Date() && returnDate > departureDate}
+                          className="rounded-md border" 
                         />
                       </PopoverContent>
                     </Popover>
