@@ -21,11 +21,51 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import React, { useState } from "react";
+import { format } from "date-fns"
+import { CalendarIcon } from "lucide-react";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 
 export default function FlightSearch() {
   const [tripType, setTripType] = useState("round")
   const [departureDate, setDepartureDate] = useState<Date>()
   const [returnDate, setReturnDate] = useState<Date>()
+  const [date, setDate] = useState<Date>()
+
+  const hours = Array.from({ length: 24 }, (_, i) => i)
+
+  const handleDepartureDateSelect = (departureDate: Date | undefined) => {
+    if (departureDate) {
+      setDepartureDate(departureDate)
+    }
+  }
+
+  const handleTimeChange = (
+    type: "hour" | "minute",
+    value: string
+  ) => {
+    console.log('push')
+      if (type === "hour") {
+        if (!departureDate) {
+          console.log('push if文 hour')
+          return
+        }
+        departureDate.setHours(parseInt(value))
+      } else if (type === "minute") {
+        if (!departureDate) {
+          console.log('push if文 minute')
+          return
+        }
+        departureDate.setMinutes(parseInt(value))
+      }
+      console.log(departureDate)
+      setDepartureDate(departureDate)
+  }
+
+  const handleReturnDateSelect = (returnDate: Date | undefined) => {
+    if (returnDate) {
+      setReturnDate(returnDate)
+    }
+  }
 
   return (
     <div className="relative bg-cover bg-center min-h-[70vh]">
@@ -65,17 +105,58 @@ export default function FlightSearch() {
                     <PopoverTrigger asChild>
                       {/* departureDateがからでなければ日付を表示 */}
                       <Button variant="outline" className="w-full mt-1 text-left">
-                        日付を選択
+                        <CalendarIcon className="mr-2 h-4 w-4" />
+                        {departureDate ? (
+                          format(departureDate, 'yyyy/MM/dd HH:mm')
+                        ): (
+                          <span>日付を選択</span>
+                        )}
                       </Button>
                     </PopoverTrigger>
                     <PopoverContent className="w-auto p-0">
-                      <Calendar 
-                        mode="single"
-                        selected={departureDate}
-                        onSelect={setDepartureDate}
-                        initialFocus
-                        disabled={(departureDate) => departureDate < new Date()}
-                        className="rounded-md border" />
+                      <div className="sm:flex">
+                        <Calendar 
+                          mode="single"
+                          selected={departureDate}
+                          onSelect={handleDepartureDateSelect}
+                          initialFocus
+                          disabled={(departureDate) => departureDate < new Date()}
+                          className="rounded-md border" />
+                        <div className="flex flex-col sm:flex-row sm:h-[300px] divide-y sm:divide-y-0 sm:divide-x">
+                          <ScrollArea className="w-64 sm:w-auto">
+                            <div className="flex sm:flex-col p-2">
+                              {hours.reverse().map((hour) => (
+                                <Button
+                                  key={hour}
+                                  size="icon"
+                                  variant={date && date.getHours() == hour ? "default" : "ghost"}
+                                  className="sm:w-full shrink-0 aspect-square"
+                                  onClick={() => handleTimeChange("hour", hour.toString())}
+                                >
+                                  {hour}
+                                </Button>
+                              ))}
+                            </div>
+                            <ScrollBar orientation="horizontal" className="sm:hidden" />
+                          </ScrollArea>
+                          <ScrollArea className="w-64 sm:w-auto">
+                            <div className="flex sm:flex-col p-2">
+                              {Array.from({ length:12 },(_, i) => i * 5).map((minute) => (
+                                <Button
+                                  key={minute}
+                                  size="icon"
+                                  variant={date && date.getMinutes() == minute ? "default" : "ghost"}
+                                  className="sm:w-full shrink-0 aspect-square"
+                                  onClick={() => handleTimeChange("minute", minute.toString())}
+                                >
+                                  {minute.toString().padStart(2, '0')}
+                                </Button>
+                              ))}
+                            </div>
+                            <ScrollBar orientation="horizontal" className="sm:hidden" />
+                          </ScrollArea>
+                        </div>
+                      </div>
                     </PopoverContent>
                   </Popover>
                 </div>
@@ -86,14 +167,20 @@ export default function FlightSearch() {
                     <Popover>
                       <PopoverTrigger asChild>
                         <Button variant="outline" className="w-full mt-1 text-left">
-                          日付を選択
+                        <CalendarIcon className="mr-2 h-4 w-4" />
+                          {returnDate ? (
+                            format(returnDate, 'yyyy/MM/dd hh:mm')
+                          ): (
+                            <span>日付を選択</span>
+                          )}
                         </Button>
                       </PopoverTrigger>
                       <PopoverContent className="w-auto p-0">
                         <Calendar 
                           mode="single"
+                          fromDate={departureDate ? departureDate : new Date()}
                           selected={returnDate}
-                          onSelect={setReturnDate} 
+                          onSelect={handleReturnDateSelect} 
                           initialFocus
                           disabled={departureDate && returnDate && returnDate < new Date() && returnDate > departureDate}
                           className="rounded-md border" 
