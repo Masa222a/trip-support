@@ -29,9 +29,11 @@ export default function FlightSearch() {
   const [tripType, setTripType] = useState("round")
   const [departureDate, setDepartureDate] = useState<Date>()
   const [returnDate, setReturnDate] = useState<Date>()
-  const [date, setDate] = useState<Date>()
+  const [dDate] = useState<Date>()
+  const [rDate] = useState<Date>()
 
-  const hours = Array.from({ length: 24 }, (_, i) => i)
+  const dHours = Array.from({ length: 24 }, (_, i) => i)
+  const rHours = Array.from({ length: 24 }, (_, i) => i)
 
   const handleDepartureDateSelect = (departureDate: Date | undefined) => {
     if (departureDate) {
@@ -39,32 +41,61 @@ export default function FlightSearch() {
     }
   }
 
-  const handleTimeChange = (
+  const handleDepartureTimeChange = (
     type: "hour" | "minute",
     value: string
   ) => {
-    console.log('push')
-      if (type === "hour") {
-        if (!departureDate) {
-          console.log('push if文 hour')
-          return
-        }
-        departureDate.setHours(parseInt(value))
-      } else if (type === "minute") {
-        if (!departureDate) {
-          console.log('push if文 minute')
-          return
-        }
-        departureDate.setMinutes(parseInt(value))
-      }
-      console.log(departureDate)
-      setDepartureDate(departureDate)
+    if (!departureDate) {
+      return;
+    }
+    const newDepartureDate = new Date(departureDate);
+    if (type === "hour") {
+      newDepartureDate.setHours(parseInt(value));
+    } else if (type === "minute") {
+      newDepartureDate.setMinutes(parseInt(value));
+    }
+    setDepartureDate(newDepartureDate);
   }
-
+  
   const handleReturnDateSelect = (returnDate: Date | undefined) => {
     if (returnDate) {
       setReturnDate(returnDate)
     }
+  }
+
+  const handleReturnTimeChange = (
+    type: "hour" | "minute",
+    value: string
+  ) => {
+    if (!returnDate) {
+      return;
+    }
+    const newReturnDate = new Date(returnDate);
+    if (type === "hour") {
+      newReturnDate.setHours(parseInt(value));
+    } else if (type === "minute") {
+      newReturnDate.setMinutes(parseInt(value));
+    }
+    setReturnDate(newReturnDate);
+  }
+
+  const callAPI = async () => {
+    const url = 'https://booking-com15.p.rapidapi.com/api/v1/flights/searchFlights?fromId=KIX.AIRPORT&toId=BKK.AIRPORT&departDate=2025-06-13&returnDate=2025-06-20&stops=none&pageNo=1&adults=1&children=0%2C17&sort=CHEAPEST&cabinClass=ECONOMY&currency_code=JPY';
+
+    const apiKey = '00f2ce223fmsh839dbcfe2809209p199576jsna9c13a41c967'
+    const host = 'booking-com15.p.rapidapi.com'
+    const options = {
+      method: 'GET',
+      headers: {
+        'X-RapidAPI-Key': apiKey!,
+        'X-RapidAPI-Host': host!
+      }
+    };
+  
+    const res = await fetch(url, options);
+    const data = await res.json();
+
+    return Response.json(data);
   }
 
   return (
@@ -125,13 +156,13 @@ export default function FlightSearch() {
                         <div className="flex flex-col sm:flex-row sm:h-[300px] divide-y sm:divide-y-0 sm:divide-x">
                           <ScrollArea className="w-64 sm:w-auto">
                             <div className="flex sm:flex-col p-2">
-                              {hours.reverse().map((hour) => (
+                              {dHours.reverse().map((hour) => (
                                 <Button
                                   key={hour}
                                   size="icon"
-                                  variant={date && date.getHours() == hour ? "default" : "ghost"}
+                                  variant={dDate && dDate.getHours() == hour ? "default" : "ghost"}
                                   className="sm:w-full shrink-0 aspect-square"
-                                  onClick={() => handleTimeChange("hour", hour.toString())}
+                                  onClick={() => handleDepartureTimeChange("hour", hour.toString())}
                                 >
                                   {hour}
                                 </Button>
@@ -145,9 +176,9 @@ export default function FlightSearch() {
                                 <Button
                                   key={minute}
                                   size="icon"
-                                  variant={date && date.getMinutes() == minute ? "default" : "ghost"}
+                                  variant={dDate && dDate.getMinutes() == minute ? "default" : "ghost"}
                                   className="sm:w-full shrink-0 aspect-square"
-                                  onClick={() => handleTimeChange("minute", minute.toString())}
+                                  onClick={() => handleDepartureTimeChange("minute", minute.toString())}
                                 >
                                   {minute.toString().padStart(2, '0')}
                                 </Button>
@@ -163,31 +194,66 @@ export default function FlightSearch() {
 
                 {tripType == "round" && (
                   <div>
-                    <Label htmlFor="return-date" className="text-gray-700">帰国日</Label>
-                    <Popover>
-                      <PopoverTrigger asChild>
-                        <Button variant="outline" className="w-full mt-1 text-left">
+                  <Label htmlFor="departure-date" className="text-gray-700">帰国日</Label>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      {/* departureDateがからでなければ日付を表示 */}
+                      <Button variant="outline" className="w-full mt-1 text-left">
                         <CalendarIcon className="mr-2 h-4 w-4" />
-                          {returnDate ? (
-                            format(returnDate, 'yyyy/MM/dd hh:mm')
-                          ): (
-                            <span>日付を選択</span>
-                          )}
-                        </Button>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-auto p-0">
+                        {returnDate ? (
+                          format(returnDate, 'yyyy/MM/dd HH:mm')
+                        ): (
+                          <span>日付を選択</span>
+                        )}
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0">
+                      <div className="sm:flex">
                         <Calendar 
                           mode="single"
-                          fromDate={departureDate ? departureDate : new Date()}
                           selected={returnDate}
-                          onSelect={handleReturnDateSelect} 
+                          onSelect={handleReturnDateSelect}
                           initialFocus
-                          disabled={departureDate && returnDate && returnDate < new Date() && returnDate > departureDate}
-                          className="rounded-md border" 
-                        />
-                      </PopoverContent>
-                    </Popover>
-                  </div>
+                          disabled={(returnDate) => returnDate < new Date()}
+                          className="rounded-md border" />
+                        <div className="flex flex-col sm:flex-row sm:h-[300px] divide-y sm:divide-y-0 sm:divide-x">
+                          <ScrollArea className="w-64 sm:w-auto">
+                            <div className="flex sm:flex-col p-2">
+                              {rHours.reverse().map((hour) => (
+                                <Button
+                                  key={hour}
+                                  size="icon"
+                                  variant={rDate && rDate.getHours() == hour ? "default" : "ghost"}
+                                  className="sm:w-full shrink-0 aspect-square"
+                                  onClick={() => handleReturnTimeChange("hour", hour.toString())}
+                                >
+                                  {hour}
+                                </Button>
+                              ))}
+                            </div>
+                            <ScrollBar orientation="horizontal" className="sm:hidden" />
+                          </ScrollArea>
+                          <ScrollArea className="w-64 sm:w-auto">
+                            <div className="flex sm:flex-col p-2">
+                              {Array.from({ length:12 },(_, i) => i * 5).map((minute) => (
+                                <Button
+                                  key={minute}
+                                  size="icon"
+                                  variant={dDate && dDate.getMinutes() == minute ? "default" : "ghost"}
+                                  className="sm:w-full shrink-0 aspect-square"
+                                  onClick={() => handleReturnTimeChange("minute", minute.toString())}
+                                >
+                                  {minute.toString().padStart(2, '0')}
+                                </Button>
+                              ))}
+                            </div>
+                            <ScrollBar orientation="horizontal" className="sm:hidden" />
+                          </ScrollArea>
+                        </div>
+                      </div>
+                    </PopoverContent>
+                  </Popover>
+                </div>
                 )}
 
                 <div>
@@ -207,7 +273,10 @@ export default function FlightSearch() {
               </div>
 
               {/* 検索ボタン */}
-              <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700 text-white text-lg">
+              <Button 
+                type="submit" 
+                className="w-full bg-blue-600 hover:bg-blue-700 text-white text-lg"
+                onClick={callAPI}>
                 検索する
               </Button>
             </form>
