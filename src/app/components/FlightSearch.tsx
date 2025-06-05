@@ -29,8 +29,12 @@ export default function FlightSearch() {
   const [tripType, setTripType] = useState("round")
   const [departureDate, setDepartureDate] = useState<Date>()
   const [returnDate, setReturnDate] = useState<Date>()
+  const [from, setFrom] = useState<string>()
+  const [to, setTo] = useState<string>()
   const [dDate] = useState<Date>()
   const [rDate] = useState<Date>()
+  const [loading, setLoading] = useState(false);
+  const [result, setResult] = useState(null);
 
   const dHours = Array.from({ length: 24 }, (_, i) => i)
   const rHours = Array.from({ length: 24 }, (_, i) => i)
@@ -79,8 +83,9 @@ export default function FlightSearch() {
     setReturnDate(newReturnDate);
   }
 
-  const callAPI = async () => {
-    const url = 'https://booking-com15.p.rapidapi.com/api/v1/flights/searchFlights?fromId=KIX.AIRPORT&toId=BKK.AIRPORT&departDate=2025-06-13&returnDate=2025-06-20&stops=none&pageNo=1&adults=1&children=0%2C17&sort=CHEAPEST&cabinClass=ECONOMY&currency_code=JPY';
+  const callAPI = async (from: string, to: string) => {
+    setLoading(true)
+    const url = `https://booking-com15.p.rapidapi.com/api/v1/flights/searchFlights?fromId={from}.AIRPORT&toId={to}.AIRPORT&departDate=2025-06-13&returnDate=2025-06-20&stops=none&pageNo=1&adults=1&children=0%2C17&sort=CHEAPEST&cabinClass=ECONOMY&currency_code=JPY`;
 
     const apiKey = '00f2ce223fmsh839dbcfe2809209p199576jsna9c13a41c967'
     const host = 'booking-com15.p.rapidapi.com'
@@ -91,11 +96,17 @@ export default function FlightSearch() {
         'X-RapidAPI-Host': host!
       }
     };
-  
-    const res = await fetch(url, options);
-    const data = await res.json();
-
-    return Response.json(data);
+    try {
+      const res = await fetch(url, options);
+      const data = await res.json();
+      console.log(data)
+      console.log(url)
+      setResult(data)
+    } catch (error) {
+      console.error("API error:", error)
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -120,11 +131,27 @@ export default function FlightSearch() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                 <div>
                   <Label htmlFor="from" className="text-gray-700">出発地</Label>
-                  <Input id="from" name="from" placeholder="東京（羽田/成田）" className="mt-1" required />
+                  <Input 
+                    id="from" 
+                    name="from" 
+                    placeholder="東京（羽田/成田）" 
+                    className="mt-1" 
+                    required 
+                    value={from}
+                    onChange={(e) => setFrom(e.target.value)}
+                  />
                 </div>
                 <div>
                   <Label htmlFor="to" className="text-gray-700">目的地</Label>
-                  <Input id="to" name="to" placeholder="大阪（関西）" className="mt-1" required />
+                  <Input 
+                    id="to" 
+                    name="to" 
+                    placeholder="大阪（関西）" 
+                    className="mt-1" 
+                    required 
+                    value={to}
+                    onChange={(e) => setTo(e.target.value)}
+                  />
                 </div>
               </div>
 
@@ -274,11 +301,21 @@ export default function FlightSearch() {
 
               {/* 検索ボタン */}
               <Button 
-                type="submit" 
+                type="submit"
+                disabled={loading} 
                 className="w-full bg-blue-600 hover:bg-blue-700 text-white text-lg"
-                onClick={callAPI}>
-                検索する
+                onClick={() => {
+                  if (from && to) {
+                    callAPI(from, to)
+                  } else {
+                    alert("出発地と到着地を入力してください")
+                  }
+                }}>
+                  {loading ? "検索中..." : "検索する"}
               </Button>
+              {loading && (
+                <p className="text-gray-600 text-center mt-4">フライトを検索中です...</p>
+              )}
             </form>
           </Tabs>
         </div>
