@@ -24,6 +24,8 @@ import React, { useState } from "react";
 import { format } from "date-fns"
 import { CalendarIcon } from "lucide-react";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+// import FlightArchive from "./FlightArchive";
+import dayjs from 'dayjs';
 
 export default function FlightSearch() {
   const [tripType, setTripType] = useState("round")
@@ -34,7 +36,7 @@ export default function FlightSearch() {
   const [dDate] = useState<Date>()
   const [rDate] = useState<Date>()
   const [loading, setLoading] = useState(false);
-  const [result, setResult] = useState(null);
+  const [result, setResult] = useState<any[]>([]);
 
   const dHours = Array.from({ length: 24 }, (_, i) => i)
   const rHours = Array.from({ length: 24 }, (_, i) => i)
@@ -60,7 +62,7 @@ export default function FlightSearch() {
     }
     setDepartureDate(newDepartureDate);
   }
-  
+
   const handleReturnDateSelect = (returnDate: Date | undefined) => {
     if (returnDate) {
       setReturnDate(returnDate)
@@ -83,10 +85,11 @@ export default function FlightSearch() {
     setReturnDate(newReturnDate);
   }
 
-  const callAPI = async (from: string, to: string) => {
+  const callAPI = async () => {
     setLoading(true)
-    const url = `https://booking-com15.p.rapidapi.com/api/v1/flights/searchFlights?fromId={from}.AIRPORT&toId={to}.AIRPORT&departDate=2025-06-13&returnDate=2025-06-20&stops=none&pageNo=1&adults=1&children=0%2C17&sort=CHEAPEST&cabinClass=ECONOMY&currency_code=JPY`;
-
+    setResult([])
+    // const url = `https://booking-com15.p.rapidapi.com/api/v1/flights/searchFlights?fromId={from}.AIRPORT&toId={to}.AIRPORT&departDate=2025-06-13&returnDate=2025-06-20&stops=none&pageNo=1&adults=1&children=0%2C17&sort=CHEAPEST&cabinClass=ECONOMY&currency_code=JPY`;
+    const url = 'https://booking-com15.p.rapidapi.com/api/v1/flights/searchFlights?fromId=KIX.AIRPORT&toId=BKK.AIRPORT&departDate=2025-06-13&returnDate=2025-06-20&stops=none&pageNo=1&adults=1&children=0%2C17&sort=CHEAPEST&cabinClass=ECONOMY&currency_code=JPY'
     const apiKey = '00f2ce223fmsh839dbcfe2809209p199576jsna9c13a41c967'
     const host = 'booking-com15.p.rapidapi.com'
     const options = {
@@ -98,10 +101,11 @@ export default function FlightSearch() {
     };
     try {
       const res = await fetch(url, options);
-      const data = await res.json();
-      console.log(data)
+      const flightData = await res.json();
+      const items = flightData.data || []
+      console.log(items)
       console.log(url)
-      setResult(data)
+      setResult(items)
     } catch (error) {
       console.error("API error:", error)
     } finally {
@@ -305,16 +309,40 @@ export default function FlightSearch() {
                 disabled={loading} 
                 className="w-full bg-blue-600 hover:bg-blue-700 text-white text-lg"
                 onClick={() => {
-                  if (from && to) {
-                    callAPI(from, to)
-                  } else {
-                    alert("出発地と到着地を入力してください")
-                  }
+                  // if (from && to) {
+                    // callAPI(from, to)
+                    callAPI()
+                  // } else {
+                  //   alert("出発地と到着地を入力してください")
+                  // }
                 }}>
                   {loading ? "検索中..." : "検索する"}
               </Button>
               {loading && (
                 <p className="text-gray-600 text-center mt-4">フライトを検索中です...</p>
+              )}
+              {!loading && result.length > 0 && (
+                <div className="mt-6 space-y-4">
+                  <h2 className="text-xl font-bold">検索結果</h2>
+                  {result.map((res, index) => {
+                    const segment = res.segments?.[0]; // 最初のセグメントを表示（直行便）
+                    if (!segment) return null;
+                    console.log(segment)
+
+                    const depTime = dayjs(segment.departure.at).format('YYYY/MM/DD HH:mm');
+                    const arrTime = dayjs(segment.arrival.at).format('YYYY/MM/DD HH:mm');
+
+                    return (
+                      <div key={index} className="border rounded p-4 shadow">
+                        <p><strong>出発地:</strong> {segment.departure.iataCode}</p>
+                        <p><strong>到着地:</strong> {segment.arrival.iataCode}</p>
+                        <p><strong>出発時刻:</strong> {depTime}</p>
+                        <p><strong>到着時刻:</strong> {arrTime}</p>
+                        <p><strong>フライト時間:</strong> {segment.duration}</p>
+                      </div>
+                    );
+                  })}
+                </div>
               )}
             </form>
           </Tabs>
