@@ -26,6 +26,7 @@ import { CalendarIcon } from "lucide-react";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 // import FlightArchive from "./FlightArchive";
 import dayjs from 'dayjs';
+import flightData from '../../../data/flightData'
 
 export default function FlightSearch() {
   const [tripType, setTripType] = useState("round")
@@ -89,23 +90,49 @@ export default function FlightSearch() {
     setLoading(true)
     setResult([])
     // const url = `https://booking-com15.p.rapidapi.com/api/v1/flights/searchFlights?fromId={from}.AIRPORT&toId={to}.AIRPORT&departDate=2025-06-13&returnDate=2025-06-20&stops=none&pageNo=1&adults=1&children=0%2C17&sort=CHEAPEST&cabinClass=ECONOMY&currency_code=JPY`;
-    const url = 'https://booking-com15.p.rapidapi.com/api/v1/flights/searchFlights?fromId=KIX.AIRPORT&toId=BKK.AIRPORT&departDate=2025-06-13&returnDate=2025-06-20&stops=none&pageNo=1&adults=1&children=0%2C17&sort=CHEAPEST&cabinClass=ECONOMY&currency_code=JPY'
-    const apiKey = '00f2ce223fmsh839dbcfe2809209p199576jsna9c13a41c967'
-    const host = 'booking-com15.p.rapidapi.com'
-    const options = {
-      method: 'GET',
-      headers: {
-        'X-RapidAPI-Key': apiKey!,
-        'X-RapidAPI-Host': host!
-      }
-    };
+    // const url = 'https://booking-com15.p.rapidapi.com/api/v1/flights/searchFlights?fromId=KIX.AIRPORT&toId=BKK.AIRPORT&departDate=2025-12-12&returnDate=2025-12-20&stops=none&pageNo=1&adults=1&children=0%2C17&sort=CHEAPEST&cabinClass=ECONOMY&currency_code=JPY'
+    // const apiKey = '00f2ce223fmsh839dbcfe2809209p199576jsna9c13a41c967'
+    // const host = 'booking-com15.p.rapidapi.com'
+    // const options = {
+    //   method: 'GET',
+    //   headers: {
+    //     'X-RapidAPI-Key': apiKey!,
+    //     'X-RapidAPI-Host': host!
+    //   }
+    // };
     try {
-      const res = await fetch(url, options);
-      const flightData = await res.json();
-      const items = flightData.data || []
-      console.log(items)
-      console.log(url)
-      setResult(items)
+      // const res = await fetch(url, options);
+      // const flightData = await res.json();
+
+      // const data = JSON.parse(jsonData);
+      const items = flightData.flightOffers || []
+      // const items = flightData.data.flightOffers || []
+
+      console.log(JSON.stringify(flightData, null, 2)) 
+      // console.log(JSON.stringify(flightData, null, 2)) 
+      
+      const flightList:any[] = []
+
+      items.forEach((item: any) => {
+        item.segments.forEach((segment: any, segIndex: number) => {
+          const durationSeconds = segment.totalTime || 0;
+          const hours = Math.floor(durationSeconds / 3600);
+          const minutes = Math.floor((durationSeconds % 3600) / 60);
+          const duration = `${hours}時間${minutes}分`
+
+          flightList.push({
+            id: segIndex,
+            departureAirport: segment.departureAirport?.name || '不明',
+            arrivalAirport: segment.arrivalAirport?.name || '不明',
+            departureTime: dayjs(segment.departureTime).format('YYYY/MM/DD HH:mm'),
+            arrivalTime: dayjs(segment.arrivalTime).format('YYYY/MM/DD HH:mm'),
+            duration: duration,
+          })
+        })
+      })
+      
+      console.log(`----${flightList}`)
+      setResult(flightList)
     } catch (error) {
       console.error("API error:", error)
     } finally {
@@ -318,7 +345,7 @@ export default function FlightSearch() {
                 }}>
                   {loading ? "検索中..." : "検索する"}
               </Button>
-              {loading && (
+              {loading && !result && (
                 <p className="text-gray-600 text-center mt-4">フライトを検索中です...</p>
               )}
               {!loading && result.length > 0 && (
@@ -327,7 +354,6 @@ export default function FlightSearch() {
                   {result.map((res, index) => {
                     const segment = res.segments?.[0]; // 最初のセグメントを表示（直行便）
                     if (!segment) return null;
-                    console.log(segment)
 
                     const depTime = dayjs(segment.departure.at).format('YYYY/MM/DD HH:mm');
                     const arrTime = dayjs(segment.arrival.at).format('YYYY/MM/DD HH:mm');
