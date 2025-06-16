@@ -27,6 +27,7 @@ import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 // import FlightArchive from "./FlightArchive";
 import dayjs from 'dayjs';
 import flightData from '../../../data/flightData'
+import { FlightListInterface } from '@/types/FlightList'
 
 export default function FlightSearch() {
   const [tripType, setTripType] = useState("round")
@@ -37,7 +38,7 @@ export default function FlightSearch() {
   const [dDate] = useState<Date>()
   const [rDate] = useState<Date>()
   const [loading, setLoading] = useState(false);
-  const [result, setResult] = useState<any[]>([]);
+  const [result, setResult] = useState<FlightListInterface[]>([]);
 
   const dHours = Array.from({ length: 24 }, (_, i) => i)
   const rHours = Array.from({ length: 24 }, (_, i) => i)
@@ -105,21 +106,27 @@ export default function FlightSearch() {
       // const flightData = await res.json();
 
       // const data = JSON.parse(jsonData);
-      const items = flightData.flightOffers || []
-      // const items = flightData.data.flightOffers || []
+      // const items = flightData.flightOffers || []
+      const items = flightData.data.flightOffers || []
 
       console.log(JSON.stringify(flightData, null, 2)) 
       // console.log(JSON.stringify(flightData, null, 2)) 
-      
-      const flightList:any[] = []
 
+      const flightList:FlightListInterface[] = []
+      // typeやモデルを定義して、それを元にデータの受け渡しを行う
       items.forEach((item: any) => {
         item.segments.forEach((segment: any, segIndex: number) => {
           const durationSeconds = segment.totalTime || 0;
           const hours = Math.floor(durationSeconds / 3600);
           const minutes = Math.floor((durationSeconds % 3600) / 60);
           const duration = `${hours}時間${minutes}分`
+          // const price = item.price?.formatted || item.totalPrice || '不明';
+          const priceData = item.travellerPrices?.[0]?.travellerPriceBreakdown?.total
+          const price = priceData
+            ? `${priceData.units.toLocaleString()}円`
+            : '価格不明'
 
+          // api側で梱包まで行うのが良い
           flightList.push({
             id: segIndex,
             departureAirport: segment.departureAirport?.name || '不明',
@@ -127,11 +134,12 @@ export default function FlightSearch() {
             departureTime: dayjs(segment.departureTime).format('YYYY/MM/DD HH:mm'),
             arrivalTime: dayjs(segment.arrivalTime).format('YYYY/MM/DD HH:mm'),
             duration: duration,
+            price: price
           })
         })
       })
-      
-      console.log(`----${flightList}`)
+
+      console.log(`----${flightList[0].departureAirport}`)
       setResult(flightList)
     } catch (error) {
       console.error("API error:", error)
@@ -336,12 +344,7 @@ export default function FlightSearch() {
                 disabled={loading} 
                 className="w-full bg-blue-600 hover:bg-blue-700 text-white text-lg"
                 onClick={() => {
-                  // if (from && to) {
-                    // callAPI(from, to)
                     callAPI()
-                  // } else {
-                  //   alert("出発地と到着地を入力してください")
-                  // }
                 }}>
                   {loading ? "検索中..." : "検索する"}
               </Button>
@@ -352,19 +355,17 @@ export default function FlightSearch() {
                 <div className="mt-6 space-y-4">
                   <h2 className="text-xl font-bold">検索結果</h2>
                   {result.map((res, index) => {
-                    const segment = res.segments?.[0]; // 最初のセグメントを表示（直行便）
+                    const segment = res; // 最初のセグメントを表示（直行便）
+                    console.log(`segment: ${res.departureAirport}`)
                     if (!segment) return null;
-
-                    const depTime = dayjs(segment.departure.at).format('YYYY/MM/DD HH:mm');
-                    const arrTime = dayjs(segment.arrival.at).format('YYYY/MM/DD HH:mm');
-
                     return (
                       <div key={index} className="border rounded p-4 shadow">
-                        <p><strong>出発地:</strong> {segment.departure.iataCode}</p>
-                        <p><strong>到着地:</strong> {segment.arrival.iataCode}</p>
-                        <p><strong>出発時刻:</strong> {depTime}</p>
-                        <p><strong>到着時刻:</strong> {arrTime}</p>
+                        <p><strong>出発地:</strong> {segment.departureAirport}</p>
+                        <p><strong>到着地:</strong> {segment.arrivalAirport}</p>
+                        <p><strong>出発時刻:</strong> {segment.departureTime}</p>
+                        <p><strong>到着時刻:</strong> {segment.arrivalTime}</p>
                         <p><strong>フライト時間:</strong> {segment.duration}</p>
+                        <p><strong>料金:</strong> {segment.price}</p>
                       </div>
                     );
                   })}

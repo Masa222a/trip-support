@@ -1,0 +1,1258 @@
+"flightOffers": [
+  {
+    "token": "d6a1f_H4sIAAAAAAAA_1WQbY-bMAzHP0376ggkQIGTookB1yFKe1C4dXsTQUopbe9SkWx9-PRz4bRpsmX_f3YeLO-VOstnXd-dunavpPZLolYo0VaqQVy867seQi3Esfto9arr9STefE0STMIoIAYEHT9h58nQNTD-_ONLU5071KMdjTZFlC_9BSvy-JW95nEQL-fT5qo02XM67eoGVVTzPG-UklP3U_V0huwVdt3Qmg0lLhS10OzFDUlczF-MsdjTeZbPVtZAW5oGl8sijGRaSMi-fPDq7jvAeHmQJD_so_R4KrOyvK3ukbnGGZzdLt6Cy3VpqBLumkXoO1kpZHpv5aKIb9n6otJsYobgwzcN5xQjZDkeHlhUkpqj4oqScTKxVXS9eftmjKPB8I7pGGPvSrE5I95UNqeGq058JM2NBr5ruxrstOHE1tYM2LD_Y881NFj3X8bE-ccTEtjH99_1DcTE9MFbZqDBQO8HjREGXbE8Rj8TRGKUPHo181JInHklpC2rPQs_6g3TbJu4oHbMgtgx_PnCgcXfId1Z7Z5dZf0BNhIQnz8CAAA.",
+    "segments": [
+      {
+        "departureAirport": {
+          "type": "AIRPORT",
+          "code": "KIX",
+          "name": "Kansai International Airport",
+          "city": "OSA",
+          "cityName": "Osaka",
+          "country": "JP",
+          "countryName": "Japan",
+          "province": "Osaka"
+        },
+        "arrivalAirport": {
+          "type": "AIRPORT",
+          "code": "BKK",
+          "name": "Suvarnabhumi Airport",
+          "city": "BKK",
+          "cityName": "Bangkok",
+          "country": "TH",
+          "countryName": "Thailand",
+          "province": "Bangkok Province"
+        },
+        "departureTime": "2025-12-12T16:30:00",
+        "arrivalTime": "2025-12-13T00:40:00",
+        "legs": [
+          {
+            "departureTime": "2025-12-12T16:30:00",
+            "arrivalTime": "2025-12-12T18:10:00",
+            "departureAirport": {
+              "type": "AIRPORT",
+              "code": "KIX",
+              "name": "Kansai International Airport",
+              "city": "OSA",
+              "cityName": "Osaka",
+              "country": "JP",
+              "countryName": "Japan",
+              "province": "Osaka"
+            },
+            "arrivalAirport": {
+              "type": "AIRPORT",
+              "code": "PVG",
+              "name": "Shanghai Pudong International Airport",
+              "city": "SHA",
+              "cityName": "Shanghai",
+              "country": "CN",
+              "countryName": "China",
+              "province": "Shanghai Area"
+            },
+            "cabinClass": "ECONOMY",
+            "flightInfo": {
+              "facilities": [],
+              "flightNumber": 858,
+              "planeType": "321",
+              "carrierInfo": {
+                "operatingCarrier": "CA",
+                "marketingCarrier": "CA",
+                "operatingCarrierDisclosureText": ""
+              }
+            },
+            "carriers": [
+              "CA",
+              "CA"
+            ],
+            "carriersData": [
+              {
+                "name": "Air China",
+                "code": "CA",
+                "logo": "https://r-xx.bstatic.com/data/airlines_logo/CA.png"
+              },
+              {
+                "name": "Air China",
+                "code": "CA",
+                "logo": "https://r-xx.bstatic.com/data/airlines_logo/CA.png"
+              }
+            ],
+            "totalTime": 9600,
+            "flightStops": [],
+            "amenities": [],
+            "departureTerminal": "1",
+            "arrivalTerminal": "2"
+          },
+          {
+            "departureTime": "2025-12-12T21:20:00",
+            "arrivalTime": "2025-12-13T00:40:00",
+            "departureAirport": {
+              "type": "AIRPORT",
+              "code": "PVG",
+              "name": "Shanghai Pudong International Airport",
+              "city": "SHA",
+              "cityName": "Shanghai",
+              "country": "CN",
+              "countryName": "China",
+              "province": "Shanghai Area"
+            },
+            "arrivalAirport": {
+              "type": "AIRPORT",
+              "code": "BKK",
+              "name": "Suvarnabhumi Airport",
+              "city": "BKK",
+              "cityName": "Bangkok",
+              "country": "TH",
+              "countryName": "Thailand",
+              "province": "Bangkok Province"
+            },
+            "cabinClass": "ECONOMY",
+            "flightInfo": {
+              "facilities": [],
+              "flightNumber": 805,
+              "planeType": "320",
+              "carrierInfo": {
+                "operatingCarrier": "CA",
+                "marketingCarrier": "CA",
+                "operatingCarrierDisclosureText": ""
+              }
+            },
+            "carriers": [
+              "CA",
+              "CA"
+            ],
+            "carriersData": [
+              {
+                "name": "Air China",
+                "code": "CA",
+                "logo": "https://r-xx.bstatic.com/data/airlines_logo/CA.png"
+              },
+              {
+                "name": "Air China",
+                "code": "CA",
+                "logo": "https://r-xx.bstatic.com/data/airlines_logo/CA.png"
+              }
+            ],
+            "totalTime": 15600,
+            "flightStops": [],
+            "amenities": [],
+            "departureTerminal": "2"
+          }
+        ],
+        "totalTime": 36600,
+        "travellerCheckedLuggage": [
+          {
+            "travellerReference": "1",
+            "luggageAllowance": {
+              "luggageType": "CHECKED_IN",
+              "ruleType": "PIECE_BASED",
+              "maxPiece": 2,
+              "maxWeightPerPiece": 50.7,
+              "massUnit": "LB"
+            }
+          },
+          {
+            "travellerReference": "2",
+            "luggageAllowance": {
+              "luggageType": "CHECKED_IN",
+              "ruleType": "PIECE_BASED",
+              "maxPiece": 2,
+              "maxWeightPerPiece": 50.7,
+              "massUnit": "LB"
+            }
+          },
+          {
+            "travellerReference": "3",
+            "luggageAllowance": {
+              "luggageType": "CHECKED_IN",
+              "ruleType": "PIECE_BASED",
+              "maxPiece": 1,
+              "maxWeightPerPiece": 50.7,
+              "massUnit": "LB"
+            }
+          }
+        ],
+        "travellerCabinLuggage": [
+          {
+            "travellerReference": "1",
+            "luggageAllowance": {
+              "luggageType": "HAND",
+              "maxPiece": 1,
+              "maxWeightPerPiece": 11,
+              "massUnit": "LB",
+              "sizeRestrictions": {
+                "maxLength": 21.7,
+                "maxWidth": 15.8,
+                "maxHeight": 7.9,
+                "sizeUnit": "INCH"
+              }
+            },
+            "personalItem": true
+          },
+          {
+            "travellerReference": "2",
+            "luggageAllowance": {
+              "luggageType": "HAND",
+              "maxPiece": 1,
+              "maxWeightPerPiece": 11,
+              "massUnit": "LB",
+              "sizeRestrictions": {
+                "maxLength": 21.7,
+                "maxWidth": 15.8,
+                "maxHeight": 7.9,
+                "sizeUnit": "INCH"
+              }
+            },
+            "personalItem": true
+          }
+        ],
+        "isAtolProtected": false,
+        "showWarningDestinationAirport": false,
+        "showWarningOriginAirport": false
+      },
+      {
+        "departureAirport": {
+          "type": "AIRPORT",
+          "code": "BKK",
+          "name": "Suvarnabhumi Airport",
+          "city": "BKK",
+          "cityName": "Bangkok",
+          "country": "TH",
+          "countryName": "Thailand",
+          "province": "Bangkok Province"
+        },
+        "arrivalAirport": {
+          "type": "AIRPORT",
+          "code": "KIX",
+          "name": "Kansai International Airport",
+          "city": "OSA",
+          "cityName": "Osaka",
+          "country": "JP",
+          "countryName": "Japan",
+          "province": "Osaka"
+        },
+        "departureTime": "2025-12-20T01:30:00",
+        "arrivalTime": "2025-12-20T16:00:00",
+        "legs": [
+          {
+            "departureTime": "2025-12-20T01:30:00",
+            "arrivalTime": "2025-12-20T07:10:00",
+            "departureAirport": {
+              "type": "AIRPORT",
+              "code": "BKK",
+              "name": "Suvarnabhumi Airport",
+              "city": "BKK",
+              "cityName": "Bangkok",
+              "country": "TH",
+              "countryName": "Thailand",
+              "province": "Bangkok Province"
+            },
+            "arrivalAirport": {
+              "type": "AIRPORT",
+              "code": "PEK",
+              "name": "Beijing Capital International Airport",
+              "city": "BJS",
+              "cityName": "Beijing",
+              "country": "CN",
+              "countryName": "China",
+              "province": "Hebei"
+            },
+            "cabinClass": "ECONOMY",
+            "flightInfo": {
+              "facilities": [],
+              "flightNumber": 980,
+              "planeType": "333",
+              "carrierInfo": {
+                "operatingCarrier": "CA",
+                "marketingCarrier": "CA",
+                "operatingCarrierDisclosureText": ""
+              }
+            },
+            "carriers": [
+              "CA",
+              "CA"
+            ],
+            "carriersData": [
+              {
+                "name": "Air China",
+                "code": "CA",
+                "logo": "https://r-xx.bstatic.com/data/airlines_logo/CA.png"
+              },
+              {
+                "name": "Air China",
+                "code": "CA",
+                "logo": "https://r-xx.bstatic.com/data/airlines_logo/CA.png"
+              }
+            ],
+            "totalTime": 16800,
+            "flightStops": [],
+            "amenities": [],
+            "arrivalTerminal": "3"
+          },
+          {
+            "departureTime": "2025-12-20T12:00:00",
+            "arrivalTime": "2025-12-20T16:00:00",
+            "departureAirport": {
+              "type": "AIRPORT",
+              "code": "PEK",
+              "name": "Beijing Capital International Airport",
+              "city": "BJS",
+              "cityName": "Beijing",
+              "country": "CN",
+              "countryName": "China",
+              "province": "Hebei"
+            },
+            "arrivalAirport": {
+              "type": "AIRPORT",
+              "code": "KIX",
+              "name": "Kansai International Airport",
+              "city": "OSA",
+              "cityName": "Osaka",
+              "country": "JP",
+              "countryName": "Japan",
+              "province": "Osaka"
+            },
+            "cabinClass": "ECONOMY",
+            "flightInfo": {
+              "facilities": [],
+              "flightNumber": 127,
+              "planeType": "321",
+              "carrierInfo": {
+                "operatingCarrier": "CA",
+                "marketingCarrier": "CA",
+                "operatingCarrierDisclosureText": ""
+              }
+            },
+            "carriers": [
+              "CA",
+              "CA"
+            ],
+            "carriersData": [
+              {
+                "name": "Air China",
+                "code": "CA",
+                "logo": "https://r-xx.bstatic.com/data/airlines_logo/CA.png"
+              },
+              {
+                "name": "Air China",
+                "code": "CA",
+                "logo": "https://r-xx.bstatic.com/data/airlines_logo/CA.png"
+              }
+            ],
+            "totalTime": 10800,
+            "flightStops": [],
+            "amenities": [],
+            "departureTerminal": "3",
+            "arrivalTerminal": "1"
+          }
+        ],
+        "totalTime": 45000,
+        "travellerCheckedLuggage": [
+          {
+            "travellerReference": "1",
+            "luggageAllowance": {
+              "luggageType": "CHECKED_IN",
+              "ruleType": "PIECE_BASED",
+              "maxPiece": 2,
+              "maxWeightPerPiece": 50.7,
+              "massUnit": "LB"
+            }
+          },
+          {
+            "travellerReference": "2",
+            "luggageAllowance": {
+              "luggageType": "CHECKED_IN",
+              "ruleType": "PIECE_BASED",
+              "maxPiece": 2,
+              "maxWeightPerPiece": 50.7,
+              "massUnit": "LB"
+            }
+          },
+          {
+            "travellerReference": "3",
+            "luggageAllowance": {
+              "luggageType": "CHECKED_IN",
+              "ruleType": "PIECE_BASED",
+              "maxPiece": 1,
+              "maxWeightPerPiece": 50.7,
+              "massUnit": "LB"
+            }
+          }
+        ],
+        "travellerCabinLuggage": [
+          {
+            "travellerReference": "1",
+            "luggageAllowance": {
+              "luggageType": "HAND",
+              "maxPiece": 1,
+              "maxWeightPerPiece": 11,
+              "massUnit": "LB",
+              "sizeRestrictions": {
+                "maxLength": 21.7,
+                "maxWidth": 15.8,
+                "maxHeight": 7.9,
+                "sizeUnit": "INCH"
+              }
+            },
+            "personalItem": true
+          },
+          {
+            "travellerReference": "2",
+            "luggageAllowance": {
+              "luggageType": "HAND",
+              "maxPiece": 1,
+              "maxWeightPerPiece": 11,
+              "massUnit": "LB",
+              "sizeRestrictions": {
+                "maxLength": 21.7,
+                "maxWidth": 15.8,
+                "maxHeight": 7.9,
+                "sizeUnit": "INCH"
+              }
+            },
+            "personalItem": true
+          }
+        ],
+        "isAtolProtected": false,
+        "showWarningDestinationAirport": false,
+        "showWarningOriginAirport": false
+      }
+    ],
+    "priceBreakdown": {
+      "total": {
+        "currencyCode": "JPY",
+        "units": 106234,
+        "nanos": 870000000
+      },
+      "baseFare": {
+        "currencyCode": "JPY",
+        "units": 63279,
+        "nanos": 660000000
+      },
+      "fee": {
+        "currencyCode": "JPY",
+        "units": -3027,
+        "nanos": 50000000
+      },
+      "tax": {
+        "currencyCode": "JPY",
+        "units": 46097,
+        "nanos": 570000000
+      },
+      "totalRounded": {
+        "currencyCode": "JPY",
+        "nanos": 870000000,
+        "units": 106234
+      },
+      "discount": {
+        "currencyCode": "JPY",
+        "units": 0,
+        "nanos": 0
+      },
+      "totalWithoutDiscount": {
+        "currencyCode": "JPY",
+        "units": 106234,
+        "nanos": 870000000
+      },
+      "totalWithoutDiscountRounded": {
+        "currencyCode": "JPY",
+        "nanos": 870000000,
+        "units": 106234
+      },
+      "carrierTaxBreakdown": [
+        {
+          "carrier": {
+            "name": "Air China",
+            "code": "CA",
+            "logo": "https://r-xx.bstatic.com/data/airlines_logo/CA.png"
+          },
+          "avgPerAdult": {
+            "currencyCode": "JPY",
+            "units": 22818,
+            "nanos": 150000000
+          },
+          "avgPerChild": {
+            "currencyCode": "JPY",
+            "units": 22818,
+            "nanos": 150000000
+          },
+          "avgPerInfant": {
+            "currencyCode": "JPY",
+            "units": 461,
+            "nanos": 260000000
+          }
+        }
+      ],
+      "showPriceStrikethrough": false,
+      "carrierPriceBreakdown": []
+    },
+    "travellerPrices": [
+      {
+        "travellerPriceBreakdown": {
+          "total": {
+            "currencyCode": "JPY",
+            "units": 51949,
+            "nanos": 860000000
+          },
+          "baseFare": {
+            "currencyCode": "JPY",
+            "units": 29079,
+            "nanos": 810000000
+          },
+          "fee": {
+            "currencyCode": "JPY",
+            "units": 0,
+            "nanos": 0
+          },
+          "tax": {
+            "currencyCode": "JPY",
+            "units": 22818,
+            "nanos": 150000000
+          },
+          "totalRounded": {
+            "currencyCode": "JPY",
+            "nanos": 350000000,
+            "units": 52036
+          },
+          "discount": {
+            "currencyCode": "JPY",
+            "units": 0,
+            "nanos": 0
+          },
+          "totalWithoutDiscount": {
+            "currencyCode": "JPY",
+            "units": 51949,
+            "nanos": 860000000
+          },
+          "totalWithoutDiscountRounded": {
+            "currencyCode": "JPY",
+            "nanos": 350000000,
+            "units": 52036
+          },
+          "showPriceStrikethrough": false,
+          "carrierPriceBreakdown": []
+        },
+        "travellerReference": "1",
+        "travellerType": "ADULT"
+      },
+      {
+        "travellerPriceBreakdown": {
+          "total": {
+            "currencyCode": "JPY",
+            "units": 51935,
+            "nanos": 440000000
+          },
+          "baseFare": {
+            "currencyCode": "JPY",
+            "units": 29078,
+            "nanos": 370000000
+          },
+          "fee": {
+            "currencyCode": "JPY",
+            "units": 0,
+            "nanos": 0
+          },
+          "tax": {
+            "currencyCode": "JPY",
+            "units": 22818,
+            "nanos": 150000000
+          },
+          "totalRounded": {
+            "currencyCode": "JPY",
+            "nanos": 350000000,
+            "units": 52036
+          },
+          "discount": {
+            "currencyCode": "JPY",
+            "units": 0,
+            "nanos": 0
+          },
+          "totalWithoutDiscount": {
+            "currencyCode": "JPY",
+            "units": 51935,
+            "nanos": 440000000
+          },
+          "totalWithoutDiscountRounded": {
+            "currencyCode": "JPY",
+            "nanos": 350000000,
+            "units": 52036
+          },
+          "showPriceStrikethrough": false,
+          "carrierPriceBreakdown": []
+        },
+        "travellerReference": "2",
+        "travellerType": "KID"
+      },
+      {
+        "travellerPriceBreakdown": {
+          "total": {
+            "currencyCode": "JPY",
+            "units": 2440,
+            "nanos": 370000000
+          },
+          "baseFare": {
+            "currencyCode": "JPY",
+            "units": 5121,
+            "nanos": 470000000
+          },
+          "fee": {
+            "currencyCode": "JPY",
+            "units": -3027,
+            "nanos": 50000000
+          },
+          "tax": {
+            "currencyCode": "JPY",
+            "units": 461,
+            "nanos": 260000000
+          },
+          "totalRounded": {
+            "currencyCode": "JPY",
+            "nanos": 470000000,
+            "units": 2450
+          },
+          "discount": {
+            "currencyCode": "JPY",
+            "units": 0,
+            "nanos": 0
+          },
+          "totalWithoutDiscount": {
+            "currencyCode": "JPY",
+            "units": 2440,
+            "nanos": 370000000
+          },
+          "totalWithoutDiscountRounded": {
+            "currencyCode": "JPY",
+            "nanos": 470000000,
+            "units": 2450
+          },
+          "showPriceStrikethrough": false,
+          "carrierPriceBreakdown": []
+        },
+        "travellerReference": "3",
+        "travellerType": "KID"
+      }
+    ],
+    "priceDisplayRequirements": [],
+    "pointOfSale": "us",
+    "tripType": "ROUNDTRIP",
+    "posMismatch": {
+      "detectedPointOfSale": "us",
+      "isPOSMismatch": false,
+      "offerSalesCountry": "us"
+    },
+    "includedProductsBySegment": [
+      [
+        {
+          "travellerReference": "1",
+          "travellerProducts": [
+            {
+              "type": "checkedInBaggage",
+              "product": {
+                "luggageType": "CHECKED_IN",
+                "ruleType": "PIECE_BASED",
+                "maxPiece": 2,
+                "maxWeightPerPiece": 50.7,
+                "massUnit": "LB"
+              }
+            },
+            {
+              "type": "cabinBaggage",
+              "product": {
+                "luggageType": "HAND",
+                "maxPiece": 1,
+                "maxWeightPerPiece": 11,
+                "massUnit": "LB",
+                "sizeRestrictions": {
+                  "maxLength": 21.7,
+                  "maxWidth": 15.8,
+                  "maxHeight": 7.9,
+                  "sizeUnit": "INCH"
+                }
+              }
+            },
+            {
+              "type": "personalItem"
+            }
+          ]
+        },
+        {
+          "travellerReference": "2",
+          "travellerProducts": [
+            {
+              "type": "checkedInBaggage",
+              "product": {
+                "luggageType": "CHECKED_IN",
+                "ruleType": "PIECE_BASED",
+                "maxPiece": 2,
+                "maxWeightPerPiece": 50.7,
+                "massUnit": "LB"
+              }
+            },
+            {
+              "type": "cabinBaggage",
+              "product": {
+                "luggageType": "HAND",
+                "maxPiece": 1,
+                "maxWeightPerPiece": 11,
+                "massUnit": "LB",
+                "sizeRestrictions": {
+                  "maxLength": 21.7,
+                  "maxWidth": 15.8,
+                  "maxHeight": 7.9,
+                  "sizeUnit": "INCH"
+                }
+              }
+            },
+            {
+              "type": "personalItem"
+            }
+          ]
+        },
+        {
+          "travellerReference": "3",
+          "travellerProducts": [
+            {
+              "type": "checkedInBaggage",
+              "product": {
+                "luggageType": "CHECKED_IN",
+                "ruleType": "PIECE_BASED",
+                "maxPiece": 1,
+                "maxWeightPerPiece": 50.7,
+                "massUnit": "LB"
+              }
+            }
+          ]
+        }
+      ],
+      [
+        {
+          "travellerReference": "1",
+          "travellerProducts": [
+            {
+              "type": "checkedInBaggage",
+              "product": {
+                "luggageType": "CHECKED_IN",
+                "ruleType": "PIECE_BASED",
+                "maxPiece": 2,
+                "maxWeightPerPiece": 50.7,
+                "massUnit": "LB"
+              }
+            },
+            {
+              "type": "cabinBaggage",
+              "product": {
+                "luggageType": "HAND",
+                "maxPiece": 1,
+                "maxWeightPerPiece": 11,
+                "massUnit": "LB",
+                "sizeRestrictions": {
+                  "maxLength": 21.7,
+                  "maxWidth": 15.8,
+                  "maxHeight": 7.9,
+                  "sizeUnit": "INCH"
+                }
+              }
+            },
+            {
+              "type": "personalItem"
+            }
+          ]
+        },
+        {
+          "travellerReference": "2",
+          "travellerProducts": [
+            {
+              "type": "checkedInBaggage",
+              "product": {
+                "luggageType": "CHECKED_IN",
+                "ruleType": "PIECE_BASED",
+                "maxPiece": 2,
+                "maxWeightPerPiece": 50.7,
+                "massUnit": "LB"
+              }
+            },
+            {
+              "type": "cabinBaggage",
+              "product": {
+                "luggageType": "HAND",
+                "maxPiece": 1,
+                "maxWeightPerPiece": 11,
+                "massUnit": "LB",
+                "sizeRestrictions": {
+                  "maxLength": 21.7,
+                  "maxWidth": 15.8,
+                  "maxHeight": 7.9,
+                  "sizeUnit": "INCH"
+                }
+              }
+            },
+            {
+              "type": "personalItem"
+            }
+          ]
+        },
+        {
+          "travellerReference": "3",
+          "travellerProducts": [
+            {
+              "type": "checkedInBaggage",
+              "product": {
+                "luggageType": "CHECKED_IN",
+                "ruleType": "PIECE_BASED",
+                "maxPiece": 1,
+                "maxWeightPerPiece": 50.7,
+                "massUnit": "LB"
+              }
+            }
+          ]
+        }
+      ]
+    ],
+    "includedProducts": {
+      "areAllSegmentsIdentical": true,
+      "segments": [
+        [
+          {
+            "luggageType": "PERSONAL_ITEM",
+            "maxPiece": 2,
+            "piecePerPax": 1
+          },
+          {
+            "luggageType": "HAND",
+            "maxPiece": 2,
+            "maxWeightPerPiece": 11,
+            "massUnit": "LB",
+            "sizeRestrictions": {
+              "maxLength": 21.7,
+              "maxWidth": 15.8,
+              "maxHeight": 7.9,
+              "sizeUnit": "INCH"
+            },
+            "piecePerPax": 1
+          },
+          {
+            "luggageType": "CHECKED_IN",
+            "ruleType": "PIECE_BASED",
+            "maxPiece": 5,
+            "maxWeightPerPiece": 50.7,
+            "massUnit": "LB",
+            "piecePerPax": 1
+          }
+        ]
+      ]
+    },
+    "extraProducts": [
+      {
+        "type": "flexibleTicket",
+        "priceBreakdown": {
+          "total": {
+            "currencyCode": "JPY",
+            "units": 7436,
+            "nanos": 440000000
+          },
+          "baseFare": {
+            "currencyCode": "JPY",
+            "units": 7436,
+            "nanos": 440000000
+          },
+          "fee": {
+            "currencyCode": "JPY",
+            "units": 0,
+            "nanos": 0
+          },
+          "tax": {
+            "currencyCode": "JPY",
+            "units": 0,
+            "nanos": 0
+          },
+          "discount": {
+            "currencyCode": "JPY",
+            "units": 0,
+            "nanos": 0
+          },
+          "totalWithoutDiscount": {
+            "currencyCode": "JPY",
+            "units": 7436,
+            "nanos": 440000000
+          },
+          "carrierPriceBreakdown": []
+        }
+      }
+    ],
+    "offerExtras": {
+      "flexibleTicket": {
+        "airProductReference": "n/a",
+        "travellers": [
+          "1",
+          "2"
+        ],
+        "recommendation": {
+          "recommended": false,
+          "confidence": "UNKNOWN_LEVEL"
+        },
+        "priceBreakdown": {
+          "total": {
+            "currencyCode": "JPY",
+            "units": 7436,
+            "nanos": 440000000
+          },
+          "baseFare": {
+            "currencyCode": "JPY",
+            "units": 7436,
+            "nanos": 440000000
+          },
+          "fee": {
+            "currencyCode": "JPY",
+            "units": 0,
+            "nanos": 0
+          },
+          "tax": {
+            "currencyCode": "JPY",
+            "units": 0,
+            "nanos": 0
+          },
+          "totalRounded": {
+            "currencyCode": "JPY",
+            "nanos": 540000000,
+            "units": 7495
+          },
+          "discount": {
+            "currencyCode": "JPY",
+            "units": 0,
+            "nanos": 0
+          },
+          "totalWithoutDiscount": {
+            "currencyCode": "JPY",
+            "units": 7436,
+            "nanos": 440000000
+          },
+          "totalWithoutDiscountRounded": {
+            "currencyCode": "JPY",
+            "nanos": 540000000,
+            "units": 7495
+          },
+          "showPriceStrikethrough": false,
+          "carrierPriceBreakdown": []
+        },
+        "supplierInfo": {
+          "name": "Gotogate, Inc.",
+          "termsUrl": "https://flights-us.gotogate.com/rf/travel-conditions",
+          "privacyPolicyUrl": "https://flights-us.gotogate.com/rf/privacy-policy"
+        }
+      }
+    },
+    "ancillaries": {
+      "flexibleTicket": {
+        "airProductReference": "n/a",
+        "travellers": [
+          "1",
+          "2"
+        ],
+        "priceBreakdown": {
+          "total": {
+            "currencyCode": "JPY",
+            "units": 7436,
+            "nanos": 440000000
+          },
+          "baseFare": {
+            "currencyCode": "JPY",
+            "units": 7436,
+            "nanos": 440000000
+          },
+          "fee": {
+            "currencyCode": "JPY",
+            "units": 0,
+            "nanos": 0
+          },
+          "tax": {
+            "currencyCode": "JPY",
+            "units": 0,
+            "nanos": 0
+          },
+          "discount": {
+            "currencyCode": "JPY",
+            "units": 0,
+            "nanos": 0
+          },
+          "totalWithoutDiscount": {
+            "currencyCode": "JPY",
+            "units": 7436,
+            "nanos": 440000000
+          },
+          "showPriceStrikethrough": false,
+          "carrierPriceBreakdown": []
+        },
+        "preSelected": false,
+        "recommendation": {
+          "recommended": false,
+          "confidence": "UNKNOWN_LEVEL"
+        },
+        "supplierInfo": {
+          "name": "Gotogate, Inc.",
+          "termsUrl": "https://flights-us.gotogate.com/rf/travel-conditions",
+          "privacyPolicyUrl": "https://flights-us.gotogate.com/rf/privacy-policy"
+        }
+      }
+    },
+    "brandedFareInfo": {
+      "fareName": "Standard",
+      "features": [
+        {
+          "featureName": "PERSONAL_BAGGAGE",
+          "category": "BAGGAGE",
+          "code": "BK03",
+          "label": "2 personal items",
+          "availability": "INCLUDED",
+          "icon": "PERSONAL_LUGGAGE_ICON"
+        },
+        {
+          "featureName": "CABIN_BAGGAGE",
+          "category": "BAGGAGE",
+          "code": "BK02",
+          "label": "2 carry-on bags (2 lbs each)\t",
+          "availability": "INCLUDED",
+          "icon": "CABIN_LUGGAGE_ICON"
+        },
+        {
+          "featureName": "CHECK_BAGGAGE",
+          "category": "BAGGAGE",
+          "code": "BK01",
+          "label": "5 checked bags (5 lbs total)",
+          "availability": "INCLUDED",
+          "icon": "CHECKED_IN_LUGGAGE_ICON"
+        }
+      ],
+      "fareAttributes": [],
+      "nonIncludedFeaturesRequired": false,
+      "nonIncludedFeatures": [],
+      "featuresList": [
+        {
+          "featureName": "PERSONAL_BAGGAGE",
+          "category": "BAGGAGE",
+          "code": "BK03",
+          "label": "2 personal items",
+          "availability": "INCLUDED",
+          "icon": "PERSONAL_LUGGAGE_ICON"
+        },
+        {
+          "featureName": "CABIN_BAGGAGE",
+          "category": "BAGGAGE",
+          "code": "BK02",
+          "label": "2 carry-on bags (2 lbs each)\t",
+          "availability": "INCLUDED",
+          "icon": "CABIN_LUGGAGE_ICON"
+        },
+        {
+          "featureName": "CHECK_BAGGAGE",
+          "category": "BAGGAGE",
+          "code": "BK01",
+          "label": "5 checked bags (5 lbs total)",
+          "availability": "INCLUDED",
+          "icon": "CHECKED_IN_LUGGAGE_ICON"
+        }
+      ]
+    },
+    "fareRules": [
+      {
+        "segmentIdentifiers": [
+          {
+            "segmentIndex": 0,
+            "legIndex": 0
+          },
+          {
+            "segmentIndex": 0,
+            "legIndex": 1
+          },
+          {
+            "segmentIndex": 1,
+            "legIndex": 0
+          },
+          {
+            "segmentIndex": 1,
+            "legIndex": 1
+          }
+        ],
+        "availablePolicies": [
+          {
+            "type": "CHANGE_AFTER",
+            "priceBreakdown": {
+              "total": {
+                "currencyCode": "",
+                "units": 35,
+                "nanos": 0
+              },
+              "baseFare": {
+                "currencyCode": "",
+                "units": 0,
+                "nanos": 0
+              },
+              "fee": {
+                "currencyCode": "",
+                "units": 0,
+                "nanos": 0
+              },
+              "tax": {
+                "currencyCode": "",
+                "units": 0,
+                "nanos": 0
+              },
+              "carrierPriceBreakdown": []
+            }
+          },
+          {
+            "type": "CHANGE_BEFORE",
+            "priceBreakdown": {
+              "total": {
+                "currencyCode": "",
+                "units": 35,
+                "nanos": 0
+              },
+              "baseFare": {
+                "currencyCode": "",
+                "units": 0,
+                "nanos": 0
+              },
+              "fee": {
+                "currencyCode": "",
+                "units": 0,
+                "nanos": 0
+              },
+              "tax": {
+                "currencyCode": "",
+                "units": 0,
+                "nanos": 0
+              },
+              "carrierPriceBreakdown": []
+            }
+          }
+        ],
+        "unavailablePolicies": [
+          {
+            "type": "CANCEL_AFTER"
+          },
+          {
+            "type": "CANCEL_BEFORE"
+          }
+        ]
+      }
+    ],
+    "appliedDiscounts": [],
+    "offerKeyToHighlight": "1_CA858_CA805_2_CA980_CA127.KIX20251212.BKK20251220",
+    "extraProductDisplayRequirements": {},
+    "unifiedPriceBreakdown": {
+      "price": {
+        "currencyCode": "JPY",
+        "units": 106234,
+        "nanos": 870000000
+      },
+      "items": [
+        {
+          "scope": "FLIGHT_ADULT",
+          "id": "flight_adult",
+          "title": "Adult (1)",
+          "price": {
+            "currencyCode": "JPY",
+            "units": 51949,
+            "nanos": 860000000
+          },
+          "items": [
+            {
+              "id": "flight_adult-basefare",
+              "title": "Flight fare",
+              "price": {
+                "currencyCode": "JPY",
+                "units": 29079,
+                "nanos": 810000000
+              },
+              "items": []
+            },
+            {
+              "id": "flight_adult-tax",
+              "title": "Taxes and airline fees",
+              "price": {
+                "currencyCode": "JPY",
+                "units": 22818,
+                "nanos": 150000000
+              },
+              "items": []
+            }
+          ]
+        },
+        {
+          "scope": "FLIGHT_CHILD",
+          "id": "flight_child",
+          "title": "Child (1)",
+          "price": {
+            "currencyCode": "JPY",
+            "units": 51935,
+            "nanos": 440000000
+          },
+          "items": [
+            {
+              "id": "flight_child-basefare",
+              "title": "Flight fare",
+              "price": {
+                "currencyCode": "JPY",
+                "units": 29078,
+                "nanos": 370000000
+              },
+              "items": []
+            },
+            {
+              "id": "flight_child-tax",
+              "title": "Taxes and airline fees",
+              "price": {
+                "currencyCode": "JPY",
+                "units": 22818,
+                "nanos": 150000000
+              },
+              "items": []
+            }
+          ]
+        },
+        {
+          "scope": "FLIGHT_INFANT",
+          "id": "flight_infant",
+          "title": "Infant (1)",
+          "price": {
+            "currencyCode": "JPY",
+            "units": 2440,
+            "nanos": 370000000
+          },
+          "items": [
+            {
+              "id": "flight_infant-basefare",
+              "title": "Flight fare",
+              "price": {
+                "currencyCode": "JPY",
+                "units": 5121,
+                "nanos": 470000000
+              },
+              "items": []
+            },
+            {
+              "id": "flight_infant-tax",
+              "title": "Taxes and airline fees",
+              "price": {
+                "currencyCode": "JPY",
+                "units": 461,
+                "nanos": 260000000
+              },
+              "items": []
+            }
+          ]
+        },
+        {
+          "scope": "DISCOUNT",
+          "id": "flight_infant-fee",
+          "title": "Third-party discount",
+          "price": {
+            "currencyCode": "JPY",
+            "units": -3027,
+            "nanos": 50000000
+          },
+          "items": []
+        }
+      ],
+      "addedItems": []
+    }
+  },
