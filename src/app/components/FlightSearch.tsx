@@ -28,6 +28,8 @@ import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import dayjs from 'dayjs';
 import flightData from '../../../data/flightData'
 import { FlightListInterface } from '@/types/FlightList'
+import Link from "next/link";
+import Image from 'next/image'
 
 export default function FlightSearch() {
   const [tripType, setTripType] = useState("round")
@@ -120,11 +122,13 @@ export default function FlightSearch() {
           const hours = Math.floor(durationSeconds / 3600);
           const minutes = Math.floor((durationSeconds % 3600) / 60);
           const duration = `${hours}時間${minutes}分`
-          // const price = item.price?.formatted || item.totalPrice || '不明';
-          const priceData = item.travellerPrices?.[0]?.travellerPriceBreakdown?.total
-          const price = priceData
-            ? `${priceData.units.toLocaleString()}円`
-            : '価格不明'
+          const airlineCode = item.validatingAirlineCodes?.[0];
+          const logo = item.airlineInfo?.[airlineCode]?.logo;
+          console.log(`code: ${airlineCode}`)
+          console.log(`logo: ${logo}`)
+          const totalPrice = item.travellerPrices?.[0].travellerPriceBreakdown?.total.units.toLocaleString()
+          const basePrice =  item.travellerPrices?.[0].travellerPriceBreakdown?.baseFare.units.toLocaleString()
+          const taxPrice =  item.travellerPrices?.[0].travellerPriceBreakdown?.tax.units.toLocaleString()
 
           // api側で梱包まで行うのが良い
           flightList.push({
@@ -134,12 +138,14 @@ export default function FlightSearch() {
             departureTime: dayjs(segment.departureTime).format('YYYY/MM/DD HH:mm'),
             arrivalTime: dayjs(segment.arrivalTime).format('YYYY/MM/DD HH:mm'),
             duration: duration,
-            price: price
+            logUrl: logo,
+            totalPrice: totalPrice,
+            basePrice: basePrice,
+            taxPrice: taxPrice,
           })
         })
       })
 
-      console.log(`----${flightList[0].departureAirport}`)
       setResult(flightList)
     } catch (error) {
       console.error("API error:", error)
@@ -356,7 +362,6 @@ export default function FlightSearch() {
                   <h2 className="text-xl font-bold">検索結果</h2>
                   {result.map((res, index) => {
                     const segment = res; // 最初のセグメントを表示（直行便）
-                    console.log(`segment: ${res.departureAirport}`)
                     if (!segment) return null;
                     return (
                       <div key={index} className="border rounded p-4 shadow">
@@ -365,7 +370,17 @@ export default function FlightSearch() {
                         <p><strong>出発時刻:</strong> {segment.departureTime}</p>
                         <p><strong>到着時刻:</strong> {segment.arrivalTime}</p>
                         <p><strong>フライト時間:</strong> {segment.duration}</p>
-                        <p><strong>料金:</strong> {segment.price}</p>
+                        {segment.logUrl ?
+                          <Image src={segment.logUrl} alt="logo" /> :
+                          "不明"
+                        }
+                        <p><strong>ロゴ:</strong> {segment.logUrl}</p>
+                        <p><strong>トータル:</strong> {segment.totalPrice}</p>
+                        <p><strong>税金:</strong> {segment.taxPrice}</p>
+                        <p><strong>ベース:</strong> {segment.basePrice}</p>
+                        <Link href={`/flight/${index}`} className="text-blue-500">
+                          Read More
+                        </Link>
                       </div>
                     );
                   })}
