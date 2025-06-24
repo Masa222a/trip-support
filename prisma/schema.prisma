@@ -10,7 +10,8 @@ datasource db {
 
 model User {
   id        Int      @id @default(autoincrement())
-  name      String
+  email     String
+  password  String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -23,12 +24,14 @@ model Post {
   user_id     Int
   user User @relation(fields: [user_id], references: [id])
   departure_point      String
-  destination_point      String
-  flight_time DateTime 
-  cost        Int
-  content     String
+  arrival_point      String
+  flight_time DateTime
+  logo_url String
+  total_price        Int
+  tax_price        Int
+  base_price        Int
   departure_at DateTime
-  destination_at DateTime
+  arrival_at DateTime
   searched_at DateTime @default(now())
 
   favorites Favorite[]
@@ -36,8 +39,10 @@ model Post {
 
 model Favorite {
   id        Int      @id @default(autoincrement())
-  post_id     Int
-  post Post @relation(fields: [post_id], references: [id])
+  post_id_departure     Int
+  post_id_arrival     Int
+  post Post @relation(fields: [post_id_departure], references: [id])
+  post Post @relation(fields: [post_id_arrival], references: [id])
   user_id     Int
   user User @relation(fields: [user_id], references: [id])
   createdAt DateTime @default(now())

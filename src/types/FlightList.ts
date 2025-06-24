@@ -6,7 +6,7 @@ export interface FlightListInterface{
   departureTime: string,
   arrivalTime: string,
   duration: string,
-  logUrl: string,
+  logoUrl: string,
   totalPrice: string,
   basePrice: string,
   taxPrice: string,

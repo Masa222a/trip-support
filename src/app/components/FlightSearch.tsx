@@ -122,13 +122,13 @@ export default function FlightSearch() {
           const hours = Math.floor(durationSeconds / 3600);
           const minutes = Math.floor((durationSeconds % 3600) / 60);
           const duration = `${hours}時間${minutes}分`
-          const airlineCode = item.validatingAirlineCodes?.[0];
-          const logo = item.airlineInfo?.[airlineCode]?.logo;
-          console.log(`code: ${airlineCode}`)
+          // const airlineCode = item.validatingAirlineCodes?.[0];
+          const logo = segment.legs[0].carriersData[0].logo;
+          // console.log(`code: ${airlineCode}`)
           console.log(`logo: ${logo}`)
-          const totalPrice = item.travellerPrices?.[0].travellerPriceBreakdown?.total.units.toLocaleString()
-          const basePrice =  item.travellerPrices?.[0].travellerPriceBreakdown?.baseFare.units.toLocaleString()
-          const taxPrice =  item.travellerPrices?.[0].travellerPriceBreakdown?.tax.units.toLocaleString()
+          const totalPrice = segment.travellerPrices?.[0].travellerPriceBreakdown?.total.units.toLocaleString()
+          const basePrice =  segment.travellerPrices?.[0].travellerPriceBreakdown?.baseFare.units.toLocaleString()
+          const taxPrice =  segment.travellerPrices?.[0].travellerPriceBreakdown?.tax.units.toLocaleString()
 
           // api側で梱包まで行うのが良い
           flightList.push({
@@ -371,7 +371,7 @@ export default function FlightSearch() {
                         <p><strong>到着時刻:</strong> {segment.arrivalTime}</p>
                         <p><strong>フライト時間:</strong> {segment.duration}</p>
                         {segment.logUrl ?
-                          <Image src={segment.logUrl} alt="logo" /> :
+                          <Image src={segment.logUrl} width={50} height={50} alt="logo" /> :
                           "不明"
                         }
                         <p><strong>ロゴ:</strong> {segment.logUrl}</p>
