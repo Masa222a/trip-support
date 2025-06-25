@@ -35,15 +35,19 @@ model Post {
   searched_at DateTime @default(now())
 
   favorites Favorite[]
+  favorite_departure Favorite[] @relation(name: "departure")
+  favorite_arrival Favorite[] @relation(name: "arrival") 
 }
 
 model Favorite {
   id        Int      @id @default(autoincrement())
   post_id_departure     Int
   post_id_arrival     Int
-  post Post @relation(fields: [post_id_departure], references: [id])
-  post Post @relation(fields: [post_id_arrival], references: [id])
+  post_departure Post @relation(name: "departure",fields: [post_id_departure], references: [id])
+  post_arrival Post @relation(name: "arrival", fields: [post_id_arrival], references: [id])
   user_id     Int
   user User @relation(fields: [user_id], references: [id])
   createdAt DateTime @default(now())
+
+  Post Post[]
 }
