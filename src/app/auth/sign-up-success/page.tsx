@@ -1,10 +1,8 @@
 import {
   Card,
   CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
 } from "@/components/ui/card";
+import Link from "next/link";
 
 export default function Page() {
   return (
@@ -12,17 +10,16 @@ export default function Page() {
       <div className="w-full max-w-sm">
         <div className="flex flex-col gap-6">
           <Card>
-            <CardHeader>
-              <CardTitle className="text-2xl">
-                Thank you for signing up!
-              </CardTitle>
-              <CardDescription>Check your email to confirm</CardDescription>
-            </CardHeader>
             <CardContent>
-              <p className="text-sm text-muted-foreground">
-                You&apos;ve successfully signed up. Please check your email to
-                confirm your account before signing in.
+              <p className="text-sm mt-4 text-black-500">
+                ログインが完了しました。
               </p>
+              <Link 
+              className="text-sm text-blue-500"
+              href="/"
+              >
+                Homeへ戻る
+              </Link>
             </CardContent>
           </Card>
         </div>

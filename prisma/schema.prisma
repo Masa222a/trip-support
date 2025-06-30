@@ -8,21 +8,20 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id        Int      @id @default(autoincrement())
-  email     String
-  password  String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+// model User {
+//   id        Int      @id @default(autoincrement())
+//   email     String
+//   password  String
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
 
-  posts Post[]
-  favorites Favorite[]
-}
+//   posts Post[]
+//   favorites Favorite[]
+// }
 
 model Post {
   id        Int      @id @default(autoincrement())
   user_id     Int
-  user User @relation(fields: [user_id], references: [id])
   departure_point      String
   arrival_point      String
   flight_time DateTime
@@ -46,7 +45,6 @@ model Favorite {
   post_departure Post @relation(name: "departure",fields: [post_id_departure], references: [id])
   post_arrival Post @relation(name: "arrival", fields: [post_id_arrival], references: [id])
   user_id     Int
-  user User @relation(fields: [user_id], references: [id])
   createdAt DateTime @default(now())
 
   Post Post[]
