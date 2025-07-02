@@ -41,6 +41,11 @@ export default function FlightSearch() {
   const [rDate] = useState<Date>()
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<FlightListInterface[]>([]);
+  const [isFavorited, setIsFavorited] = useState(false);
+
+  const toggleFavorite = () => {
+    setIsFavorited(!isFavorited);
+  };
 
   const dHours = Array.from({ length: 24 }, (_, i) => i)
   const rHours = Array.from({ length: 24 }, (_, i) => i)
@@ -122,15 +127,12 @@ export default function FlightSearch() {
           const hours = Math.floor(durationSeconds / 3600);
           const minutes = Math.floor((durationSeconds % 3600) / 60);
           const duration = `${hours}時間${minutes}分`
-          // const airlineCode = item.validatingAirlineCodes?.[0];
           const logo = segment.legs[0].carriersData[0].logo;
-          // console.log(`code: ${airlineCode}`)
-          console.log(`logo: ${logo}`)
+          // api側で梱包まで行うのが良い
           const totalPrice = segment.travellerPrices?.[0].travellerPriceBreakdown?.total.units.toLocaleString()
           const basePrice =  segment.travellerPrices?.[0].travellerPriceBreakdown?.baseFare.units.toLocaleString()
           const taxPrice =  segment.travellerPrices?.[0].travellerPriceBreakdown?.tax.units.toLocaleString()
-
-          // api側で梱包まで行うのが良い
+          console.log(totalPrice, basePrice, taxPrice)
           flightList.push({
             id: segIndex,
             departureAirport: segment.departureAirport?.name || '不明',
@@ -138,7 +140,7 @@ export default function FlightSearch() {
             departureTime: dayjs(segment.departureTime).format('YYYY/MM/DD HH:mm'),
             arrivalTime: dayjs(segment.arrivalTime).format('YYYY/MM/DD HH:mm'),
             duration: duration,
-            logUrl: logo,
+            logoUrl: logo,
             totalPrice: totalPrice,
             basePrice: basePrice,
             taxPrice: taxPrice,
@@ -370,17 +372,28 @@ export default function FlightSearch() {
                         <p><strong>出発時刻:</strong> {segment.departureTime}</p>
                         <p><strong>到着時刻:</strong> {segment.arrivalTime}</p>
                         <p><strong>フライト時間:</strong> {segment.duration}</p>
-                        {segment.logUrl ?
-                          <Image src={segment.logUrl} width={50} height={50} alt="logo" /> :
+                        {segment.logoUrl ?
+                          <Image src={segment.logoUrl} width={50} height={50} alt="logo" /> :
                           "不明"
                         }
-                        <p><strong>ロゴ:</strong> {segment.logUrl}</p>
                         <p><strong>トータル:</strong> {segment.totalPrice}</p>
                         <p><strong>税金:</strong> {segment.taxPrice}</p>
                         <p><strong>ベース:</strong> {segment.basePrice}</p>
                         <Link href={`/flight/${index}`} className="text-blue-500">
                           Read More
                         </Link>
+
+                        {/* Favoriteボタン右寄せ部分 */}
+                        <div className="flex justify-end mt-2 mb-4">
+                        <button
+                          onClick={toggleFavorite}
+                          className={`flex items-center gap-1 px-3 py-1 rounded transition-colors duration-200 ${
+                            isFavorited ? 'bg-red-500 text-white' : 'bg-gray-200 text-gray-800'
+                          }`}
+                        >
+                            Favorite
+                          </button>
+                        </div>
                       </div>
                     );
                   })}
