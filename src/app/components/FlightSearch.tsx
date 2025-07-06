@@ -41,10 +41,21 @@ export default function FlightSearch() {
   const [rDate] = useState<Date>()
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<FlightListInterface[]>([]);
-  const [isFavorited, setIsFavorited] = useState(false);
 
-  const toggleFavorite = () => {
-    setIsFavorited(!isFavorited);
+  const toggleFavorite = (id: number) => {
+    setResult(result.map((res, index) => {
+        if (id == index) {
+          console.log("id==index")
+          return {
+            ...res,
+            isFavorite: !res.isFavorite
+          }
+        } else {
+          console.log("else")
+          return res
+        }
+      }
+    ))
   };
 
   const dHours = Array.from({ length: 24 }, (_, i) => i)
@@ -129,10 +140,9 @@ export default function FlightSearch() {
           const duration = `${hours}時間${minutes}分`
           const logo = segment.legs[0].carriersData[0].logo;
           // api側で梱包まで行うのが良い
-          const totalPrice = segment.travellerPrices?.[0].travellerPriceBreakdown?.total.units.toLocaleString()
-          const basePrice =  segment.travellerPrices?.[0].travellerPriceBreakdown?.baseFare.units.toLocaleString()
-          const taxPrice =  segment.travellerPrices?.[0].travellerPriceBreakdown?.tax.units.toLocaleString()
-          console.log(totalPrice, basePrice, taxPrice)
+          const totalPrice = item.travellerPrices?.[0].travellerPriceBreakdown?.total.units.toLocaleString()
+          const basePrice =  item.travellerPrices?.[0].travellerPriceBreakdown?.baseFare.units.toLocaleString()
+          const taxPrice =  item.travellerPrices?.[0].travellerPriceBreakdown?.tax.units.toLocaleString()
           flightList.push({
             id: segIndex,
             departureAirport: segment.departureAirport?.name || '不明',
@@ -144,6 +154,7 @@ export default function FlightSearch() {
             totalPrice: totalPrice,
             basePrice: basePrice,
             taxPrice: taxPrice,
+            isFavorite: false,
           })
         })
       })
@@ -386,9 +397,9 @@ export default function FlightSearch() {
                         {/* Favoriteボタン右寄せ部分 */}
                         <div className="flex justify-end mt-2 mb-4">
                         <button
-                          onClick={toggleFavorite}
+                          onClick={() => toggleFavorite(index)}
                           className={`flex items-center gap-1 px-3 py-1 rounded transition-colors duration-200 ${
-                            isFavorited ? 'bg-red-500 text-white' : 'bg-gray-200 text-gray-800'
+                            segment.isFavorite ? 'bg-red-500 text-white' : 'bg-gray-200 text-gray-800'
                           }`}
                         >
                             Favorite
