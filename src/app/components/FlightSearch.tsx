@@ -30,6 +30,12 @@ import flightData from '../../../data/flightData'
 import { FlightListInterface } from '@/types/FlightList'
 import Link from "next/link";
 import Image from 'next/image'
+import { createClient } from "@/lib/supabase/client";
+
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+)
 
 export default function FlightSearch() {
   const [tripType, setTripType] = useState("round")
@@ -42,20 +48,36 @@ export default function FlightSearch() {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<FlightListInterface[]>([]);
 
-  const toggleFavorite = (id: number) => {
+  const toggleFavorite = async (id: number) => {
     setResult(result.map((res, index) => {
-        if (id == index) {
-          console.log("id==index")
-          return {
-            ...res,
-            isFavorite: !res.isFavorite
-          }
-        } else {
-          console.log("else")
-          return res
+      if (id == index) {
+        console.log(id)
+        return {
+          ...res,
+          isFavorite: !res.isFavorite
         }
+      } else {
+        console.log("else")
+        return res
       }
-    ))
+    }))
+    const user_id = supabase.auth.getUser()
+    console.log(`login user: ${user_id}`)
+    console.log(user_id)
+    const res = await supabase
+    .from('Post')
+    .insert({
+      user_id: user_id,
+      departure_point: result[id].departureAirport,
+      arrival_point: result[id].arrivalAirport,
+      flight_time: result[id].duration,
+      total_price: result[id].totalPrice,
+      logo_url: result[id].logoUrl,
+      tax_price: result[id].taxPrice,
+      base_price: result[id].basePrice,
+      departure_at: result[id].departureTime,
+      arrival_at: result[id].arrivalTime
+    })
   };
 
   const dHours = Array.from({ length: 24 }, (_, i) => i)
@@ -378,15 +400,15 @@ export default function FlightSearch() {
                     if (!segment) return null;
                     return (
                       <div key={index} className="border rounded p-4 shadow">
+                        {segment.logoUrl ?
+                          <Image src={segment.logoUrl} width={50} height={50} alt="logo" /> :
+                          "不明"
+                        }
                         <p><strong>出発地:</strong> {segment.departureAirport}</p>
                         <p><strong>到着地:</strong> {segment.arrivalAirport}</p>
                         <p><strong>出発時刻:</strong> {segment.departureTime}</p>
                         <p><strong>到着時刻:</strong> {segment.arrivalTime}</p>
                         <p><strong>フライト時間:</strong> {segment.duration}</p>
-                        {segment.logoUrl ?
-                          <Image src={segment.logoUrl} width={50} height={50} alt="logo" /> :
-                          "不明"
-                        }
                         <p><strong>トータル:</strong> {segment.totalPrice}</p>
                         <p><strong>税金:</strong> {segment.taxPrice}</p>
                         <p><strong>ベース:</strong> {segment.basePrice}</p>

@@ -9,6 +9,6 @@ export async function POST() {
   });
 
   const data = await res.json();
+  // segmentsが1場合：片道、2の場合：往復チケット
   return Response.json(data);
 }
-
