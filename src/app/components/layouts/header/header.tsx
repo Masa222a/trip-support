@@ -2,6 +2,7 @@ import Link from "next/link";
 import React from "react";
 
 const Header = () => {
+
   return (
     <div className="divide-y border-gray-200 dark:border-gray-800 border-b">
       <div className="px-4 py-3 md:py-6 lg:px-6">
@@ -30,6 +31,12 @@ const Header = () => {
 
           {/* 右側 Sign Up */}
           <div>
+            <Link
+              className="font-medium text-gray-500 transition-colors hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50 mr-4"
+              href="/auth/logout"
+            >
+              Logout
+            </Link>
             <Link
               className="font-medium text-gray-500 transition-colors hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50 mr-4"
               href="/auth/sign-up"

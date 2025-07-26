@@ -1,0 +1,49 @@
+{
+  "data": {
+    "user": {
+      "id": "130f84c1-c239-4d3f-99e1-6de2d611d1d6",
+      "aud": "authenticated",
+      "role": "authenticated",
+      "email": "guitarstring0716@gmail.com",
+      "email_confirmed_at": "2025-06-26T11:21:52.632354Z",
+      "phone": "",
+      "confirmation_sent_at": "2025-06-26T11:20:55.617373Z",
+      "confirmed_at": "2025-06-26T11:21:52.632354Z",
+      "last_sign_in_at": "2025-07-15T11:12:40.865134Z",
+      "app_metadata": {
+        "provider": "email",
+        "providers": [
+          "email"
+        ]
+      },
+      "user_metadata": {
+        "email": "guitarstring0716@gmail.com",
+        "email_verified": true,
+        "phone_verified": false,
+        "sub": "130f84c1-c239-4d3f-99e1-6de2d611d1d6"
+      },
+      "identities": [
+        {
+          "identity_id": "04dc3dc1-5b71-402d-8108-55585d784abc",
+          "id": "130f84c1-c239-4d3f-99e1-6de2d611d1d6",
+          "user_id": "130f84c1-c239-4d3f-99e1-6de2d611d1d6",
+          "identity_data": {
+            "email": "guitarstring0716@gmail.com",
+            "email_verified": true,
+            "phone_verified": false,
+            "sub": "130f84c1-c239-4d3f-99e1-6de2d611d1d6"
+          },
+          "provider": "email",
+          "last_sign_in_at": "2025-06-26T11:20:55.608694Z",
+          "created_at": "2025-06-26T11:20:55.608744Z",
+          "updated_at": "2025-06-26T11:20:55.608744Z",
+          "email": "guitarstring0716@gmail.com"
+        }
+      ],
+      "created_at": "2025-06-26T11:20:55.586196Z",
+      "updated_at": "2025-07-23T13:05:20.073233Z",
+      "is_anonymous": false
+    }
+  },
+  "error": null
+}

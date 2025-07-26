@@ -61,9 +61,9 @@ export default function FlightSearch() {
         return res
       }
     }))
-    const user_id = supabase.auth.getUser()
+    const user_id = await supabase.auth.getUser()
     console.log(`login user: ${user_id}`)
-    console.log(user_id)
+    console.log(JSON.stringify(user_id))
     const res = await supabase
     .from('Post')
     .insert({
