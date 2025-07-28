@@ -10,6 +10,7 @@ const Header = () => {
   useEffect(() => {
     (async() => {
       const { data } = await supabase.auth.getUser()
+      console.log(`----data:${JSON.stringify(data)}`)
       if (data.user != null) {
         setStatus(data.user.id)
       } else {
