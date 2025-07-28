@@ -61,13 +61,14 @@ export default function FlightSearch() {
         return res
       }
     }))
-    const user_id = await supabase.auth.getUser()
-    console.log(`login user: ${user_id}`)
-    console.log(JSON.stringify(user_id))
-    const res = await supabase
+    const { data } = await supabase.auth.getUser()
+    console.log(JSON.stringify(data))
+    console.log(`login user: ${data.user.id}`)
+    // 取得までの時間をローディングさせるように新しく作成
+    const postData = await supabase
     .from('Post')
     .insert({
-      user_id: user_id,
+      // user_id: data.user.id,
       departure_point: result[id].departureAirport,
       arrival_point: result[id].arrivalAirport,
       flight_time: result[id].duration,
@@ -78,6 +79,17 @@ export default function FlightSearch() {
       departure_at: result[id].departureTime,
       arrival_at: result[id].arrivalTime
     })
+    .select()
+    console.log(`postData: ${JSON.stringify(postData)}`)
+    
+    const favoriteData = await supabase
+    .from('Favorite')
+    .insert({
+      user_id: parseInt(data.user.id),
+      post_id_arrival: postData.id,
+      post_id_departure: null
+    })
+
   };
 
   const dHours = Array.from({ length: 24 }, (_, i) => i)
