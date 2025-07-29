@@ -2,6 +2,7 @@
 
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select"
 import { useState } from "react"
+import Header from "./layouts/header/header"
 
 export type GPTPrompt = {
   location: string
@@ -28,6 +29,7 @@ export const GPTForm = ({ onSubmit }: Props) => {
 
   return (
     <div className="space-y-4 max-w-2xl mx-auto p-6">
+      <Header />
       <Select onValueChange={setLocation}>
         <SelectTrigger className="w-full">
           <SelectValue placeholder="行き先を選択" />

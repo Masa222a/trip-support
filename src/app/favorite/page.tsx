@@ -2,6 +2,7 @@
 
 import { Trash2 } from 'lucide-react';
 import { useState } from 'react'
+import Header from '../components/layouts/header/header';
 
 const favoritePage = () => {
   const [isFavorited, setIsFavorited] = useState(true);
@@ -17,6 +18,7 @@ const favoritePage = () => {
   
   return (
     <div>
+      <Header />
       <button
         type="button"
         className="ml-4 mt-4 rounded bg-gray-200 p-2 transition-colors hover:bg-gray-300"

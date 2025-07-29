@@ -1,6 +1,7 @@
 "use client"
 import { useRouter } from 'next/navigation' 
 import Link from "next/link";
+import Header from '@/app/components/layouts/header/header';
 
 const FlightDetailPage = () => {
   const router = useRouter()
@@ -8,6 +9,7 @@ const FlightDetailPage = () => {
   return (
     <div className="max-w-3xl mx-auto bg-white my-4 rounded-xl shadow-lg p-6 space-y-6">
       {/* ヘッダー */}
+      <Header />
       <div className="text-center">
         <h1 className="text-2xl font-bold text-gray-800">バンコク</h1>
         <p className="text-sm text-gray-500">旅行者1名・往復・エコノミークラス</p>

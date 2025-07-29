@@ -31,6 +31,7 @@ import { FlightListInterface } from '@/types/FlightList'
 import Link from "next/link";
 import Image from 'next/image'
 import { createClient } from "@/lib/supabase/client";
+import Header from "./layouts/header/header";
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -202,6 +203,8 @@ export default function FlightSearch() {
   }
 
   return (
+    <div>
+      <Header />
     <div className="relative bg-cover bg-center min-h-[70vh]">
       <div className="absolute inset-0 bg-black/50" />
       <div className="relative z-10 flex flex-col items-center justify-center text-white text-center px-4 py-20">
@@ -231,7 +234,7 @@ export default function FlightSearch() {
                     required 
                     value={from}
                     onChange={(e) => setFrom(e.target.value)}
-                  />
+                    />
                 </div>
                 <div>
                   <Label htmlFor="to" className="text-gray-700">目的地</Label>
@@ -243,7 +246,7 @@ export default function FlightSearch() {
                     required 
                     value={to}
                     onChange={(e) => setTo(e.target.value)}
-                  />
+                    />
                 </div>
               </div>
 
@@ -277,11 +280,11 @@ export default function FlightSearch() {
                             <div className="flex sm:flex-col p-2">
                               {dHours.reverse().map((hour) => (
                                 <Button
-                                  key={hour}
-                                  size="icon"
-                                  variant={dDate && dDate.getHours() == hour ? "default" : "ghost"}
-                                  className="sm:w-full shrink-0 aspect-square"
-                                  onClick={() => handleDepartureTimeChange("hour", hour.toString())}
+                                key={hour}
+                                size="icon"
+                                variant={dDate && dDate.getHours() == hour ? "default" : "ghost"}
+                                className="sm:w-full shrink-0 aspect-square"
+                                onClick={() => handleDepartureTimeChange("hour", hour.toString())}
                                 >
                                   {hour}
                                 </Button>
@@ -293,11 +296,11 @@ export default function FlightSearch() {
                             <div className="flex sm:flex-col p-2">
                               {Array.from({ length:12 },(_, i) => i * 5).map((minute) => (
                                 <Button
-                                  key={minute}
-                                  size="icon"
-                                  variant={dDate && dDate.getMinutes() == minute ? "default" : "ghost"}
-                                  className="sm:w-full shrink-0 aspect-square"
-                                  onClick={() => handleDepartureTimeChange("minute", minute.toString())}
+                                key={minute}
+                                size="icon"
+                                variant={dDate && dDate.getMinutes() == minute ? "default" : "ghost"}
+                                className="sm:w-full shrink-0 aspect-square"
+                                onClick={() => handleDepartureTimeChange("minute", minute.toString())}
                                 >
                                   {minute.toString().padStart(2, '0')}
                                 </Button>
@@ -340,11 +343,11 @@ export default function FlightSearch() {
                             <div className="flex sm:flex-col p-2">
                               {rHours.reverse().map((hour) => (
                                 <Button
-                                  key={hour}
-                                  size="icon"
-                                  variant={rDate && rDate.getHours() == hour ? "default" : "ghost"}
-                                  className="sm:w-full shrink-0 aspect-square"
-                                  onClick={() => handleReturnTimeChange("hour", hour.toString())}
+                                key={hour}
+                                size="icon"
+                                variant={rDate && rDate.getHours() == hour ? "default" : "ghost"}
+                                className="sm:w-full shrink-0 aspect-square"
+                                onClick={() => handleReturnTimeChange("hour", hour.toString())}
                                 >
                                   {hour}
                                 </Button>
@@ -356,11 +359,11 @@ export default function FlightSearch() {
                             <div className="flex sm:flex-col p-2">
                               {Array.from({ length:12 },(_, i) => i * 5).map((minute) => (
                                 <Button
-                                  key={minute}
-                                  size="icon"
-                                  variant={dDate && dDate.getMinutes() == minute ? "default" : "ghost"}
-                                  className="sm:w-full shrink-0 aspect-square"
-                                  onClick={() => handleReturnTimeChange("minute", minute.toString())}
+                                key={minute}
+                                size="icon"
+                                variant={dDate && dDate.getMinutes() == minute ? "default" : "ghost"}
+                                className="sm:w-full shrink-0 aspect-square"
+                                onClick={() => handleReturnTimeChange("minute", minute.toString())}
                                 >
                                   {minute.toString().padStart(2, '0')}
                                 </Button>
@@ -449,5 +452,7 @@ export default function FlightSearch() {
         </div>
       </div>
     </div>
+    </div>
+
   );
 }
