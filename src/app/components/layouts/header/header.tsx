@@ -1,11 +1,12 @@
 "use client"
-import { supabase } from "@/lib/supabaseClient";
+import { createClient } from "@/lib/supabase/client";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { LogoutButton } from "../../logout-button";
 // import { LogoutButton } from "../../logout-button";
 
 const Header = () => {
+  const supabase = createClient()
   const [status, setStatus] = useState("")
   useEffect(() => {
     (async() => {
@@ -28,26 +29,37 @@ const Header = () => {
       <div className="px-4 py-3 md:py-6 lg:px-6">
         <div className="flex items-center justify-between">
           {/* 左側ナビゲーション */}
-          <nav className="flex items-center space-x-6 text-sm">
-            <Link
-              className="font-medium text-gray-500 transition-colors hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
-              href="/"
-            >
-              Home
-            </Link>
-            <Link
-              className="font-medium text-gray-500 transition-colors hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
-              href="/chatgpt"
-            >
-              ChatGPT
-            </Link>
-            <Link
-              className="font-medium text-gray-500 transition-colors hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
-              href="/favorite"
-            >
-              Favorite
-            </Link>
-          </nav>
+          {status ?
+            <nav className="flex items-center space-x-6 text-sm">
+              <Link
+                className="font-medium text-gray-500 transition-colors hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
+                href="/"
+              >
+                Home
+              </Link>
+              <Link
+                className="font-medium text-gray-500 transition-colors hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
+                href="/chatgpt"
+              >
+                ChatGPT
+              </Link>
+              <Link
+                className="font-medium text-gray-500 transition-colors hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
+                href="/favorite"
+              >
+                Favorite
+              </Link>
+            </nav>
+            :
+            <nav className="flex items-center space-x-6 text-sm">
+              <Link
+                className="font-medium text-gray-500 transition-colors hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
+                href="/"
+              >
+                Home
+              </Link>
+            </nav>
+          }
 
           {/* 右側 Sign Up */}
             {status ?

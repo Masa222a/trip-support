@@ -5,7 +5,6 @@ import Header from "./components/layouts/header/header";
 export default function Home() {
   return (
     <div>
-      {/* <Header /> */}
       <FlightSearch />
       <div>
         {/* <FlightArchive /> */}

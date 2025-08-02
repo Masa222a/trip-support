@@ -29,7 +29,6 @@ export const GPTForm = ({ onSubmit }: Props) => {
 
   return (
     <div className="space-y-4 max-w-2xl mx-auto p-6">
-      <Header />
       <Select onValueChange={setLocation}>
         <SelectTrigger className="w-full">
           <SelectValue placeholder="行き先を選択" />

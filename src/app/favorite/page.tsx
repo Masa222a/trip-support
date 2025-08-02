@@ -11,10 +11,6 @@ const favoritePage = () => {
   const toggleFavorite = () => {
     setIsFavorited(!isFavorited);
   };
-
-  const handleDelete = () => {
-
-  }
   
   return (
     <div>

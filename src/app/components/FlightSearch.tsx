@@ -20,7 +20,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { format } from "date-fns"
 import { CalendarIcon } from "lucide-react";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
@@ -33,10 +33,7 @@ import Image from 'next/image'
 import { createClient } from "@/lib/supabase/client";
 import Header from "./layouts/header/header";
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-)
+const supabase = createClient()
 
 export default function FlightSearch() {
   const [tripType, setTripType] = useState("round")
@@ -48,6 +45,20 @@ export default function FlightSearch() {
   const [rDate] = useState<Date>()
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<FlightListInterface[]>([]);
+  const [status, setStatus] = useState("")
+
+  const supabase = createClient()
+  useEffect(() => {
+    (async() => {
+      const { data } = await supabase.auth.getUser()
+      console.log(`----data:${JSON.stringify(data)}`)
+      if (data.user != null) {
+        setStatus(data.user.id)
+      } else {
+        setStatus("")
+      }
+    })()
+  }, [])
 
   const toggleFavorite = async (id: number) => {
     setResult(result.map((res, index) => {
@@ -69,7 +80,7 @@ export default function FlightSearch() {
     const postData = await supabase
     .from('Post')
     .insert({
-      // user_id: data.user.id,
+      user_id: data.user.id,
       departure_point: result[id].departureAirport,
       arrival_point: result[id].arrivalAirport,
       flight_time: result[id].duration,
@@ -82,15 +93,14 @@ export default function FlightSearch() {
     })
     .select()
     console.log(`postData: ${JSON.stringify(postData)}`)
-    
+
     const favoriteData = await supabase
     .from('Favorite')
     .insert({
       user_id: parseInt(data.user.id),
-      post_id_arrival: postData.id,
-      post_id_departure: null
+      post_id_arrival: postData.data[0].id,
+      post_id_departure: null,
     })
-
   };
 
   const dHours = Array.from({ length: 24 }, (_, i) => i)
@@ -432,16 +442,19 @@ export default function FlightSearch() {
                         </Link>
 
                         {/* Favoriteボタン右寄せ部分 */}
-                        <div className="flex justify-end mt-2 mb-4">
-                        <button
-                          onClick={() => toggleFavorite(index)}
-                          className={`flex items-center gap-1 px-3 py-1 rounded transition-colors duration-200 ${
-                            segment.isFavorite ? 'bg-red-500 text-white' : 'bg-gray-200 text-gray-800'
-                          }`}
-                        >
-                            Favorite
-                          </button>
-                        </div>
+                        {/* True && Trueの場合 */}
+                        {status && 
+                          <div className="flex justify-end mt-2 mb-4">
+                            <button
+                              onClick={() => toggleFavorite(index)}
+                              className={`flex items-center gap-1 px-3 py-1 rounded transition-colors duration-200 ${
+                                segment.isFavorite ? 'bg-red-500 text-white' : 'bg-gray-200 text-gray-800'
+                              }`}
+                            >
+                              Favorite
+                            </button>
+                          </div>
+                        }
                       </div>
                     );
                   })}
