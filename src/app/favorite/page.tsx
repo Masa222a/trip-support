@@ -28,32 +28,41 @@ export default function favoritePage() {
   }, [])  
   
   return (
-    <div>
+    <div className="px-4">
       <Header />
       {posts.map((item, index) => (
-        <div key={index} className="border rounded p-4 shadow mt-4">
-          {/* <div key={index} className="border rounded p-4 shadow"> */}
-            <p key={index}>
-            {/* departure_point, 
-            arrival_point,
-            fp
-            flight_time,
-            departure_at,
-            arrival_at,
-            base_price,
-            logo_url,
-            tax_price,
-            total_price */}
-              出発地: {item.Post.departure_point}<br />
-              到着地: {item.Post.arrival_point}<br />
-              出発時刻: {item.Post.departure_at}<br />
-              到着時刻: {item.Post.arrival_at}<br />              
-              トータル: {item.Post.total_price}<br />
-              税金: {item.Post.tax_price}<br />
-              ベース: {item.Post.base_price}
-            </p>
+        <div
+          key={index}
+          className="border rounded-2xl shadow-md p-6 mt-6 bg-white hover:shadow-lg transition"
+        >
+          <div className="flex justify-between items-center mb-4">
+            <div>
+              <h2 className="text-lg font-semibold">
+                {item.Post.departure_point} → {item.Post.arrival_point}
+              </h2>
+              <p className="text-sm text-gray-500">
+                出発: {item.Post.departure_at} | 到着: {item.Post.arrival_at}
+              </p>
+            </div>
+            {item.Post.logo_url && (
+              <img
+                src={item.Post.logo_url}
+                alt="航空会社ロゴ"
+                className="h-10 w-auto object-contain"
+              />
+            )}
+          </div>
+  
+          <div className="grid grid-cols-2 gap-y-2 text-sm text-gray-700">
+            <div className="font-medium">ベース価格:</div>
+            <div>¥{item.Post.base_price}</div>
+            <div className="font-medium">税金:</div>
+            <div>¥{item.Post.tax_price}</div>
+            <div className="font-medium">トータル価格:</div>
+            <div className="text-red-600 font-bold">¥{item.Post.total_price}</div>
+          </div>
         </div>
       ))}
     </div>
-  )
+  );
 }
