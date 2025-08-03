@@ -30,10 +30,8 @@ import flightData from '../../../data/flightData'
 import { FlightListInterface } from '@/types/FlightList'
 import Link from "next/link";
 import Image from 'next/image'
-import { createClient } from "@/lib/supabase/client";
-import Header from "./layouts/header/header";
-
-const supabase = createClient()
+import { createClient } from "@/lib/supabase/client"
+import Header from "./layouts/header/header"
 
 export default function FlightSearch() {
   const [tripType, setTripType] = useState("round")
@@ -51,7 +49,7 @@ export default function FlightSearch() {
   useEffect(() => {
     (async() => {
       const { data } = await supabase.auth.getUser()
-      console.log(`----data:${JSON.stringify(data)}`)
+      // console.log(`----data:${JSON.stringify(data)}`)
       if (data.user != null) {
         setStatus(data.user.id)
       } else {
@@ -75,7 +73,7 @@ export default function FlightSearch() {
     }))
     const { data } = await supabase.auth.getUser()
     console.log(JSON.stringify(data))
-    console.log(`login user: ${data.user.id}`)
+    // console.log(`login user: ${data.user.id}`)
     // 取得までの時間をローディングさせるように新しく作成
     const postData = await supabase
     .from('Post')
@@ -97,7 +95,7 @@ export default function FlightSearch() {
     const favoriteData = await supabase
     .from('Favorite')
     .insert({
-      user_id: parseInt(data.user.id),
+      user_id: data.user.id,
       post_id_arrival: postData.data[0].id,
       post_id_departure: null,
     })

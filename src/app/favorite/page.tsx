@@ -1,64 +1,59 @@
 "use client"
 
-import { Trash2 } from 'lucide-react';
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Header from '../components/layouts/header/header';
+import { createClient } from "@/lib/supabase/client"
 
-const favoritePage = () => {
-  const [isFavorited, setIsFavorited] = useState(true);
-  const [deleteFlag, setDeleteFlag] = useState(false)
 
-  const toggleFavorite = () => {
-    setIsFavorited(!isFavorited);
-  };
+export default function favoritePage() {
+  const [posts, setPosts] = useState([])
+  const supabase = createClient()
+  useEffect(() => {
+    (async() => {
+      const userData = await supabase.auth.getUser()
+      if (userData.data.user?.id) {
+        const favoriteData = await supabase
+        .from("Favorite")
+        .select("Post:post_id_arrival(id, departure_point, flight_time, departure_at, arrival_at, arrival_point, base_price, logo_url, tax_price, total_price)")
+        .eq("user_id", userData.data.user?.id)
+        console.log(`--お気に入りのデータ:${JSON.stringify(favoriteData.data)}`)
+        
+        if (favoriteData.data) {
+          setPosts(favoriteData.data)
+        } else {
+          setPosts([])
+        }
+      }
+    })()
+  }, [])  
   
   return (
     <div>
       <Header />
-      <button
-        type="button"
-        className="ml-4 mt-4 rounded bg-gray-200 p-2 transition-colors hover:bg-gray-300"
-      >
-      <Trash2 className="size-5 text-gray-500" />
-      </button>
-      <div className="border rounded p-4 shadow mt-4">
-        {/* <div key={index} className="border rounded p-4 shadow"> */}
-          <p><strong>出発地:</strong>大阪</p>
-          <p><strong>到着地:</strong>バンコク</p>
-          <p><strong>出発時刻:</strong>12/12</p>
-          <p><strong>到着時刻:</strong>12/20</p>
-          <p><strong>フライト時間:</strong>7時間</p>
-          {/* {segment.logoUrl ?
-            <Image src={segment.logoUrl} width={50} height={50} alt="logo" /> :
-            "不明"
-          } */}
-          <p><strong>トータル:</strong>43,000</p>
-          <p><strong>税金:</strong>4,300</p>
-          <p><strong>ベース:</strong>38,700</p>
-          {/* <Link href={`/flight/${index}`} className="text-blue-500">
-            Read More
-          </Link> */}
-      </div>
-      <div className="border rounded p-4 shadow">
-        {/* <div key={index} className="border rounded p-4 shadow"> */}
-          <p><strong>出発地:</strong>大阪</p>
-          <p><strong>到着地:</strong>バンコク</p>
-          <p><strong>出発時刻:</strong>12/12</p>
-          <p><strong>到着時刻:</strong>12/20</p>
-          <p><strong>フライト時間:</strong>7時間</p>
-          {/* {segment.logoUrl ?
-            <Image src={segment.logoUrl} width={50} height={50} alt="logo" /> :
-            "不明"
-          } */}
-          <p><strong>トータル:</strong>43,000</p>
-          <p><strong>税金:</strong>4,300</p>
-          <p><strong>ベース:</strong>38,700</p>
-          {/* <Link href={`/flight/${index}`} className="text-blue-500">
-            Read More
-          </Link> */}
-      </div>
+      {posts.map((item, index) => (
+        <div key={index} className="border rounded p-4 shadow mt-4">
+          {/* <div key={index} className="border rounded p-4 shadow"> */}
+            <p key={index}>
+            {/* departure_point, 
+            arrival_point,
+            fp
+            flight_time,
+            departure_at,
+            arrival_at,
+            base_price,
+            logo_url,
+            tax_price,
+            total_price */}
+              出発地: {item.Post.departure_point}<br />
+              到着地: {item.Post.arrival_point}<br />
+              出発時刻: {item.Post.departure_at}<br />
+              到着時刻: {item.Post.arrival_at}<br />              
+              トータル: {item.Post.total_price}<br />
+              税金: {item.Post.tax_price}<br />
+              ベース: {item.Post.base_price}
+            </p>
+        </div>
+      ))}
     </div>
   )
 }
-
-export default favoritePage
