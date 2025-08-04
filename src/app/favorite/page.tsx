@@ -27,6 +27,23 @@ export default function favoritePage() {
     })()
   }, [])  
   
+  const handleDelete = async (id: string) => {
+    const confirmed = window.confirm("本当に削除しますか？");
+    if (!confirmed) return;
+  
+    const { error } = await supabase
+      .from("Favorite")
+      .delete()
+      .eq("post_id_arrival", id); // ここも id を直接使う
+  
+    if (!error) {
+      setPosts((prev) => prev.filter((item) => item.Post.id !== id));
+    } else {
+      alert("削除に失敗しました");
+    }
+  };
+  
+
   return (
     <div className="px-4">
       <Header />
@@ -60,6 +77,16 @@ export default function favoritePage() {
             <div>¥{item.Post.tax_price}</div>
             <div className="font-medium">トータル価格:</div>
             <div className="text-red-600 font-bold">¥{item.Post.total_price}</div>
+          </div>
+
+          {/* 下部: 削除ボタン */}
+          <div className="flex justify-end mt-6">
+            <button
+              onClick={() => handleDelete(item.Post.id)}
+              className="bg-red-500 text-black text-sm px-4 py-2 rounded-md hover:bg-red-600 transition"
+            >
+              削除ボタン
+            </button>
           </div>
         </div>
       ))}

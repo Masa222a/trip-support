@@ -55,6 +55,12 @@ export default function FlightSearch() {
       } else {
         setStatus("")
       }
+
+      const favData = await supabase
+      .from("Favorite")
+      .select("*")
+      .not('token', 'is', null)
+      console.log(`favariteData token not null ${JSON.stringify(favData)}`)
     })()
   }, [])
 
@@ -96,8 +102,9 @@ export default function FlightSearch() {
     .from('Favorite')
     .insert({
       user_id: data.user.id,
-      post_id_arrival: postData.data[0].id,
+      post_id_arrival: postData.data.id,
       post_id_departure: null,
+      token: postData.data.flightOffers.token.toString()
     })
   };
 

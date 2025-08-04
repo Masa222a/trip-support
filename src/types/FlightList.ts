@@ -10,5 +10,6 @@ export interface FlightListInterface{
   totalPrice: string,
   basePrice: string,
   taxPrice: string,
-  isFavorite: boolean
+  isFavorite: boolean,
+  token: string
 }
