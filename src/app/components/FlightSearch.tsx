@@ -44,12 +44,12 @@ export default function FlightSearch() {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<FlightListInterface[]>([]);
   const [status, setStatus] = useState("")
+  const [tokens, setToken] = useState([])
 
   const supabase = createClient()
   useEffect(() => {
     (async() => {
       const { data } = await supabase.auth.getUser()
-      // console.log(`----data:${JSON.stringify(data)}`)
       if (data.user != null) {
         setStatus(data.user.id)
       } else {
@@ -60,25 +60,33 @@ export default function FlightSearch() {
       .from("Favorite")
       .select("*")
       .not('token', 'is', null)
-      console.log(`favariteData token not null ${JSON.stringify(favData)}`)
+      // console.log(`favData token not null ${JSON.stringify(favData)}`)
+      if (favData.data != null) {
+        const tokenArray = favData.data
+        .filter(item => item.token)
+        .map(item => item.token);
+        setToken(tokenArray)
+        // console.log(tokenArray);
+      } else {
+        setToken([])
+      }
+
     })()
   }, [])
 
   const toggleFavorite = async (id: number) => {
     setResult(result.map((res, index) => {
       if (id == index) {
-        console.log(id)
         return {
           ...res,
           isFavorite: !res.isFavorite
         }
       } else {
-        console.log("else")
         return res
       }
     }))
     const { data } = await supabase.auth.getUser()
-    console.log(JSON.stringify(data))
+    // console.log(JSON.stringify(data))
     // console.log(`login user: ${data.user.id}`)
     // 取得までの時間をローディングさせるように新しく作成
     const postData = await supabase
@@ -96,15 +104,16 @@ export default function FlightSearch() {
       arrival_at: result[id].arrivalTime
     })
     .select()
-    console.log(`postData: ${JSON.stringify(postData)}`)
-
+    // console.log(`postData: ${JSON.stringify(postData)}`)
+    // console.log(`token の中身: ${result[id].token}`)
+    
     const favoriteData = await supabase
     .from('Favorite')
     .insert({
       user_id: data.user.id,
-      post_id_arrival: postData.data.id,
+      post_id_arrival: postData.data[0].id,
       post_id_departure: null,
-      token: postData.data.flightOffers.token.toString()
+      token: result[id].token
     })
   };
 
@@ -155,7 +164,7 @@ export default function FlightSearch() {
     setReturnDate(newReturnDate);
   }
 
-  const callAPI = async () => {
+  const callAPI = async (tokens) => {
     setLoading(true)
     setResult([])
     // const url = `https://booking-com15.p.rapidapi.com/api/v1/flights/searchFlights?fromId={from}.AIRPORT&toId={to}.AIRPORT&departDate=2025-06-13&returnDate=2025-06-20&stops=none&pageNo=1&adults=1&children=0%2C17&sort=CHEAPEST&cabinClass=ECONOMY&currency_code=JPY`;
@@ -177,7 +186,6 @@ export default function FlightSearch() {
       // const items = flightData.flightOffers || []
       const items = flightData.data.flightOffers || []
 
-      console.log(JSON.stringify(flightData, null, 2)) 
       // console.log(JSON.stringify(flightData, null, 2)) 
 
       const flightList:FlightListInterface[] = []
@@ -193,6 +201,9 @@ export default function FlightSearch() {
           const totalPrice = item.travellerPrices?.[0].travellerPriceBreakdown?.total.units.toLocaleString()
           const basePrice =  item.travellerPrices?.[0].travellerPriceBreakdown?.baseFare.units.toLocaleString()
           const taxPrice =  item.travellerPrices?.[0].travellerPriceBreakdown?.tax.units.toLocaleString()
+          const isFavorite = tokens.includes(item.token)
+
+          // console.log(`segment token: ${item.token}`)
           flightList.push({
             id: segIndex,
             departureAirport: segment.departureAirport?.name || '不明',
@@ -204,7 +215,8 @@ export default function FlightSearch() {
             totalPrice: totalPrice,
             basePrice: basePrice,
             taxPrice: taxPrice,
-            isFavorite: false,
+            isFavorite: isFavorite,
+            token: item.token
           })
         })
       })
@@ -415,7 +427,7 @@ export default function FlightSearch() {
                 disabled={loading} 
                 className="w-full bg-blue-600 hover:bg-blue-700 text-white text-lg"
                 onClick={() => {
-                    callAPI()
+                    callAPI(tokens)
                 }}>
                   {loading ? "検索中..." : "検索する"}
               </Button>
@@ -423,46 +435,103 @@ export default function FlightSearch() {
                 <p className="text-gray-600 text-center mt-4">フライトを検索中です...</p>
               )}
               {!loading && result.length > 0 && (
-                <div className="mt-6 space-y-4">
+                <div className="mt-6 space-y-6">
                   <h2 className="text-xl font-bold">検索結果</h2>
-                  {result.map((res, index) => {
-                    const segment = res; // 最初のセグメントを表示（直行便）
-                    if (!segment) return null;
-                    return (
-                      <div key={index} className="border rounded p-4 shadow">
-                        {segment.logoUrl ?
-                          <Image src={segment.logoUrl} width={50} height={50} alt="logo" /> :
-                          "不明"
-                        }
-                        <p><strong>出発地:</strong> {segment.departureAirport}</p>
-                        <p><strong>到着地:</strong> {segment.arrivalAirport}</p>
-                        <p><strong>出発時刻:</strong> {segment.departureTime}</p>
-                        <p><strong>到着時刻:</strong> {segment.arrivalTime}</p>
-                        <p><strong>フライト時間:</strong> {segment.duration}</p>
-                        <p><strong>トータル:</strong> {segment.totalPrice}</p>
-                        <p><strong>税金:</strong> {segment.taxPrice}</p>
-                        <p><strong>ベース:</strong> {segment.basePrice}</p>
-                        <Link href={`/flight/${index}`} className="text-blue-500">
-                          Read More
-                        </Link>
 
-                        {/* Favoriteボタン右寄せ部分 */}
-                        {/* True && Trueの場合 */}
-                        {status && 
-                          <div className="flex justify-end mt-2 mb-4">
-                            <button
-                              onClick={() => toggleFavorite(index)}
-                              className={`flex items-center gap-1 px-3 py-1 rounded transition-colors duration-200 ${
-                                segment.isFavorite ? 'bg-red-500 text-white' : 'bg-gray-200 text-gray-800'
-                              }`}
-                            >
-                              Favorite
-                            </button>
+                  {tripType === "oneway" && (
+                    // 片道 → 現状のまま
+                    result.map((res, index) => {
+                      const segment = res;
+                      if (!segment) return null;
+                      return (
+                        <div key={index} className="border rounded p-4 shadow">
+                          {segment.logoUrl ?
+                            <Image src={segment.logoUrl} width={50} height={50} alt="logo" /> :
+                            "不明"
+                          }
+                          <p><strong>出発地:</strong> {segment.departureAirport}</p>
+                          <p><strong>到着地:</strong> {segment.arrivalAirport}</p>
+                          <p><strong>出発時刻:</strong> {segment.departureTime}</p>
+                          <p><strong>到着時刻:</strong> {segment.arrivalTime}</p>
+                          <p><strong>フライト時間:</strong> {segment.duration}</p>
+                          <p><strong>トータル:</strong> {segment.totalPrice}</p>
+                          <p><strong>税金:</strong> {segment.taxPrice}</p>
+                          <p><strong>ベース:</strong> {segment.basePrice}</p>
+                          <Link href={`/flight/${index}`} className="text-blue-500">
+                            Read More
+                          </Link>
+                          {status && 
+                            <div className="flex justify-end mt-2 mb-4">
+                              <button
+                                onClick={() => toggleFavorite(index)}
+                                className={`flex items-center gap-1 px-3 py-1 rounded transition-colors duration-200 ${
+                                  segment.isFavorite ? 'bg-red-500 text-white' : 'bg-gray-200 text-gray-800'
+                                }`}
+                              >
+                                Favorite
+                              </button>
+                            </div>
+                          }
+                        </div>
+                      );
+                    })
+                  )}
+
+                  {tripType === "round" && (
+                    <div className="space-y-6">
+                      {result.reduce((pairs: { flights: FlightListInterface[], startIndex: number }[], _, i) => {
+                        if (i % 2 === 0) pairs.push({ flights: result.slice(i, i + 2), startIndex: i });
+                        return pairs;
+                      }, []).map((pair, setIndex) => {
+                        // 合計金額計算
+                        const totalSum = pair.flights.reduce((sum, flight) => {
+                          const price = flight.totalPrice ? parseInt(flight.totalPrice.replace(/,/g, "")) : 0;
+                          return sum + price;
+                        }, 0);
+
+                        return (
+                          <div key={setIndex} className="border rounded-lg p-4 shadow bg-white">
+                            <h3 className="font-bold text-lg mb-4">往復セット {setIndex + 1}</h3>
+                            <div className="grid md:grid-cols-2 gap-4">
+                              {pair.flights.map((res, idx) => {
+                                const globalIndex = pair.startIndex + idx; // result配列でのインデックス
+                                return (
+                                  <div key={idx} className="border rounded p-4 bg-gray-50">
+                                    <div className="flex items-center gap-3 mb-2">
+                                      <Image src={res.logoUrl || "/no-logo.png"} width={40} height={40} alt="logo" />
+                                      <p className="font-semibold">{res.departureAirport} → {res.arrivalAirport}</p>
+                                    </div>
+                                    <p><strong>出発:</strong> {res.departureTime}</p>
+                                    <p><strong>到着:</strong> {res.arrivalTime}</p>
+                                    <p><strong>所要時間:</strong> {res.duration}</p>
+                                    <p><strong>料金:</strong> {res.totalPrice}円</p>
+
+                                    {/* お気に入りボタン */}
+                                    {status && (
+                                      <div className="flex justify-end mt-3">
+                                        <button
+                                          onClick={() => toggleFavorite(globalIndex)}
+                                          className={`px-3 py-1 rounded ${
+                                            res.isFavorite ? 'bg-red-500 text-white' : 'bg-gray-200 text-gray-800'
+                                          }`}
+                                        >
+                                          Favorite
+                                        </button>
+                                      </div>
+                                    )}
+                                  </div>
+                                );
+                              })}
+                            </div>
+                            {/* 合計金額表示 */}
+                            <p className="mt-4 text-right font-bold text-lg">
+                              往復合計: {totalSum.toLocaleString()}円
+                            </p>
                           </div>
-                        }
-                      </div>
-                    );
-                  })}
+                        );
+                      })}
+                    </div>
+                  )}
                 </div>
               )}
             </form>
