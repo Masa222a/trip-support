@@ -23,14 +23,15 @@ import {
 import React, { useEffect, useState } from "react";
 import { format } from "date-fns"
 import { CalendarIcon } from "lucide-react";
-import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import dayjs from 'dayjs';
-// import flightData from '../../../data/flightData'
 import { FlightListInterface } from '@/types/FlightList'
 import Link from "next/link";
 import Image from 'next/image'
 import { createClient } from "@/lib/supabase/client"
 import Header from "./layouts/header/header"
+import flightData from '../../../data/flightData'
+import Modal from 'react-modal'
+import FlightDetailModal from "./FlightDetailModal";
 
 export default function FlightSearch() {
   const [tripType, setTripType] = useState("round")
@@ -43,6 +44,8 @@ export default function FlightSearch() {
   const [status, setStatus] = useState("")
   const [tokens, setToken] = useState([])
   const [passenger, setPassenger] = useState("")
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [selectedFlight, setSelectedFlight] = useState<FlightListInterface | null>(null)
 
   const supabase = createClient()
   useEffect(() => {
@@ -126,30 +129,25 @@ export default function FlightSearch() {
   const callAPI = async () => {
     setLoading(true)
     setResult([])
-    // console.log(`-- tripType: ${tripType}`);
-    // console.log(`-- from: ${from}`);
-    // console.log(`-- to: ${to}`);
-    // console.log(`-- departureDate: ${departureDate}`);
-    // console.log(`-- returnDate: ${returnDate}`);
-    // console.log(`-- passengers: ${passenger}`);
-    let url = ""
-    if (tripType == 'round') {
-      url = `https://booking-com15.p.rapidapi.com/api/v1/flights/searchFlights?fromId=${from}.AIRPORT&toId=${to}.AIRPORT&departDate=${departureDate}&returnDate=${returnDate}&stops=none&pageNo=1&adults=${passenger}&children=0%2C17&sort=CHEAPEST&cabinClass=ECONOMY&currency_code=JPY`;
-    } else {
-      url = `https://booking-com15.p.rapidapi.com/api/v1/flights/searchFlights?fromId=${from}.AIRPORT&toId=${to}.AIRPORT&departDate=${departureDate}&stops=none&pageNo=1&adults=${passenger}&children=0%2C17&sort=CHEAPEST&cabinClass=ECONOMY&currency_code=JPY`;
-    }
-    const apiKey = '00f2ce223fmsh839dbcfe2809209p199576jsna9c13a41c967'
-    const host = 'booking-com15.p.rapidapi.com'
-    const options = {
-      method: 'GET',
-      headers: {
-        'X-RapidAPI-Key': apiKey!,
-        'X-RapidAPI-Host': host!
-      }
-    };
+
+    // let url = ""
+    // if (tripType == 'round') {
+    //   url = `https://booking-com15.p.rapidapi.com/api/v1/flights/searchFlights?fromId=${from}.AIRPORT&toId=${to}.AIRPORT&departDate=${departureDate}&returnDate=${returnDate}&stops=none&pageNo=1&adults=${passenger}&children=0%2C17&sort=CHEAPEST&cabinClass=ECONOMY&currency_code=JPY`;
+    // } else {
+    //   url = `https://booking-com15.p.rapidapi.com/api/v1/flights/searchFlights?fromId=${from}.AIRPORT&toId=${to}.AIRPORT&departDate=${departureDate}&stops=none&pageNo=1&adults=${passenger}&children=0%2C17&sort=CHEAPEST&cabinClass=ECONOMY&currency_code=JPY`;
+    // }
+    // const apiKey = '00f2ce223fmsh839dbcfe2809209p199576jsna9c13a41c967'
+    // const host = 'booking-com15.p.rapidapi.com'
+    // const options = {
+    //   method: 'GET',
+    //   headers: {
+    //     'X-RapidAPI-Key': apiKey!,
+    //     'X-RapidAPI-Host': host!
+    //   }
+    // };
     try {
-      const res = await fetch(url, options);
-      const flightData = await res.json();
+      // const res = await fetch(url, options);
+      // const flightData = await res.json();
 
       const items = flightData.data.flightOffers || []
 
@@ -196,6 +194,18 @@ export default function FlightSearch() {
   const handlePassengers = (p: string) => {
     setPassenger(p)
   }
+
+  const openModal = (flight: FlightListInterface) => {
+    console.log(`flight: ${JSON.stringify(flight)}`)
+    // const detailFlight = JSON.stringify(flight)
+    setSelectedFlight(flight);
+    setModalIsOpen(true);
+  };
+
+  const closeModal = () => {
+    setModalIsOpen(false);
+    setSelectedFlight(null);
+  };
 
   return (
     <div>
@@ -388,15 +398,22 @@ export default function FlightSearch() {
                             <p><strong>到着時刻:</strong> {segment.arrivalTime}</p>
                             <p><strong>フライト時間:</strong> {segment.duration}</p>
                             <p><strong>トータル:</strong> {segment.totalPrice}</p>
-                            <p><strong>税金:</strong> {segment.taxPrice}</p>
-                            <p><strong>ベース:</strong> {segment.basePrice}</p>
+                            {/* <p><strong>税金:</strong> {segment.taxPrice}</p>
+                            <p><strong>ベース:</strong> {segment.basePrice}</p> */}
                             {/* モーダルで作成 react-modal */}
-                            <Link href={{
-                              pathname: `/flight/${index}`,
-                              query: { flight: JSON.stringify(segment) },
-                            }} className="text-blue-500">
-                              Read More
-                            </Link>
+                            <button 
+                              onClick={() => openModal(segment)}
+                              className="mt-4 px-2 py-2 bg-blue-200 border border-blue-300 text-blue-700 rounded hover:bg-blue-100 transition duration-150 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                              >
+                              詳細を見る
+                            </button>
+
+                            <FlightDetailModal
+                              isOpen={modalIsOpen}
+                              onRequestClose={closeModal}
+                              flightData={selectedFlight}
+                            />
+
                             {status && 
                               <div className="flex justify-end mt-2 mb-4">
                                 <button
