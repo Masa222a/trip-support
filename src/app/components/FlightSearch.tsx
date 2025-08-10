@@ -24,9 +24,8 @@ import React, { useEffect, useState } from "react";
 import { format } from "date-fns"
 import { CalendarIcon } from "lucide-react";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
-// import FlightArchive from "./FlightArchive";
 import dayjs from 'dayjs';
-import flightData from '../../../data/flightData'
+// import flightData from '../../../data/flightData'
 import { FlightListInterface } from '@/types/FlightList'
 import Link from "next/link";
 import Image from 'next/image'
@@ -39,12 +38,11 @@ export default function FlightSearch() {
   const [returnDate, setReturnDate] = useState<Date>()
   const [from, setFrom] = useState<string>()
   const [to, setTo] = useState<string>()
-  const [dDate] = useState<Date>()
-  const [rDate] = useState<Date>()
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<FlightListInterface[]>([]);
   const [status, setStatus] = useState("")
   const [tokens, setToken] = useState([])
+  const [passenger, setPassenger] = useState("")
 
   const supabase = createClient()
   useEffect(() => {
@@ -60,13 +58,11 @@ export default function FlightSearch() {
       .from("Favorite")
       .select("*")
       .not('token', 'is', null)
-      // console.log(`favData token not null ${JSON.stringify(favData)}`)
       if (favData.data != null) {
         const tokenArray = favData.data
         .filter(item => item.token)
         .map(item => item.token);
         setToken(tokenArray)
-        // console.log(tokenArray);
       } else {
         setToken([])
       }
@@ -86,8 +82,6 @@ export default function FlightSearch() {
       }
     }))
     const { data } = await supabase.auth.getUser()
-    // console.log(JSON.stringify(data))
-    // console.log(`login user: ${data.user.id}`)
     // 取得までの時間をローディングさせるように新しく作成
     const postData = await supabase
     .from('Post')
@@ -104,8 +98,6 @@ export default function FlightSearch() {
       arrival_at: result[id].arrivalTime
     })
     .select()
-    // console.log(`postData: ${JSON.stringify(postData)}`)
-    // console.log(`token の中身: ${result[id].token}`)
     
     const favoriteData = await supabase
     .from('Favorite')
@@ -117,76 +109,49 @@ export default function FlightSearch() {
     })
   };
 
-  const dHours = Array.from({ length: 24 }, (_, i) => i)
-  const rHours = Array.from({ length: 24 }, (_, i) => i)
-
   const handleDepartureDateSelect = (departureDate: Date | undefined) => {
-    if (departureDate) {
-      setDepartureDate(departureDate)
-    }
-  }
-
-  const handleDepartureTimeChange = (
-    type: "hour" | "minute",
-    value: string
-  ) => {
-    if (!departureDate) {
-      return;
-    }
-    const newDepartureDate = new Date(departureDate);
-    if (type === "hour") {
-      newDepartureDate.setHours(parseInt(value));
-    } else if (type === "minute") {
-      newDepartureDate.setMinutes(parseInt(value));
-    }
-    setDepartureDate(newDepartureDate);
+    if (!departureDate) return
+    
+    const formattedDate = departureDate.toISOString().split("T")[0];
+    setDepartureDate(formattedDate)
   }
 
   const handleReturnDateSelect = (returnDate: Date | undefined) => {
-    if (returnDate) {
-      setReturnDate(returnDate)
-    }
-  }
+    if (!returnDate) return
+    
+    const formattedDate = returnDate.toISOString().split("T")[0];
+    setReturnDate(formattedDate)
+  };
 
-  const handleReturnTimeChange = (
-    type: "hour" | "minute",
-    value: string
-  ) => {
-    if (!returnDate) {
-      return;
-    }
-    const newReturnDate = new Date(returnDate);
-    if (type === "hour") {
-      newReturnDate.setHours(parseInt(value));
-    } else if (type === "minute") {
-      newReturnDate.setMinutes(parseInt(value));
-    }
-    setReturnDate(newReturnDate);
-  }
-
-  const callAPI = async (tokens) => {
+  const callAPI = async () => {
     setLoading(true)
     setResult([])
-    // const url = `https://booking-com15.p.rapidapi.com/api/v1/flights/searchFlights?fromId={from}.AIRPORT&toId={to}.AIRPORT&departDate=2025-06-13&returnDate=2025-06-20&stops=none&pageNo=1&adults=1&children=0%2C17&sort=CHEAPEST&cabinClass=ECONOMY&currency_code=JPY`;
-    // const url = 'https://booking-com15.p.rapidapi.com/api/v1/flights/searchFlights?fromId=KIX.AIRPORT&toId=BKK.AIRPORT&departDate=2025-12-12&returnDate=2025-12-20&stops=none&pageNo=1&adults=1&children=0%2C17&sort=CHEAPEST&cabinClass=ECONOMY&currency_code=JPY'
-    // const apiKey = '00f2ce223fmsh839dbcfe2809209p199576jsna9c13a41c967'
-    // const host = 'booking-com15.p.rapidapi.com'
-    // const options = {
-    //   method: 'GET',
-    //   headers: {
-    //     'X-RapidAPI-Key': apiKey!,
-    //     'X-RapidAPI-Host': host!
-    //   }
-    // };
+    // console.log(`-- tripType: ${tripType}`);
+    // console.log(`-- from: ${from}`);
+    // console.log(`-- to: ${to}`);
+    // console.log(`-- departureDate: ${departureDate}`);
+    // console.log(`-- returnDate: ${returnDate}`);
+    // console.log(`-- passengers: ${passenger}`);
+    let url = ""
+    if (tripType == 'round') {
+      url = `https://booking-com15.p.rapidapi.com/api/v1/flights/searchFlights?fromId=${from}.AIRPORT&toId=${to}.AIRPORT&departDate=${departureDate}&returnDate=${returnDate}&stops=none&pageNo=1&adults=${passenger}&children=0%2C17&sort=CHEAPEST&cabinClass=ECONOMY&currency_code=JPY`;
+    } else {
+      url = `https://booking-com15.p.rapidapi.com/api/v1/flights/searchFlights?fromId=${from}.AIRPORT&toId=${to}.AIRPORT&departDate=${departureDate}&stops=none&pageNo=1&adults=${passenger}&children=0%2C17&sort=CHEAPEST&cabinClass=ECONOMY&currency_code=JPY`;
+    }
+    const apiKey = '00f2ce223fmsh839dbcfe2809209p199576jsna9c13a41c967'
+    const host = 'booking-com15.p.rapidapi.com'
+    const options = {
+      method: 'GET',
+      headers: {
+        'X-RapidAPI-Key': apiKey!,
+        'X-RapidAPI-Host': host!
+      }
+    };
     try {
-      // const res = await fetch(url, options);
-      // const flightData = await res.json();
+      const res = await fetch(url, options);
+      const flightData = await res.json();
 
-      // const data = JSON.parse(jsonData);
-      // const items = flightData.flightOffers || []
       const items = flightData.data.flightOffers || []
-
-      // console.log(JSON.stringify(flightData, null, 2)) 
 
       const flightList:FlightListInterface[] = []
       // typeやモデルを定義して、それを元にデータの受け渡しを行う
@@ -203,7 +168,6 @@ export default function FlightSearch() {
           const taxPrice =  item.travellerPrices?.[0].travellerPriceBreakdown?.tax.units.toLocaleString()
           const isFavorite = tokens.includes(item.token)
 
-          // console.log(`segment token: ${item.token}`)
           flightList.push({
             id: segIndex,
             departureAirport: segment.departureAirport?.name || '不明',
@@ -229,317 +193,289 @@ export default function FlightSearch() {
     }
   }
 
+  const handlePassengers = (p: string) => {
+    setPassenger(p)
+  }
+
   return (
     <div>
       <Header />
-    <div className="relative bg-cover bg-center min-h-[70vh]">
-      <div className="absolute inset-0 bg-black/50" />
-      <div className="relative z-10 flex flex-col items-center justify-center text-white text-center px-4 py-20">
-        <h1 className="text-3xl md:text-5xl font-bold mb-4">最安値で航空券を予約</h1>
-        <p className="text-lg md:text-xl font-light">簡単・手軽にチケットを検索</p>
-      </div>
+      <div className="relative bg-cover bg-center min-h-[70vh]">
+        <div className="absolute inset-0 bg-black/50" />
+        <div className="relative z-10 flex flex-col items-center justify-center text-white text-center px-4 py-20">
+          <h1 className="text-3xl md:text-5xl font-bold mb-4">最安値で航空券を予約</h1>
+          <p className="text-lg md:text-xl font-light">簡単・手軽にチケットを検索</p>
+        </div>
 
-      {/* フォームセクション */}
-      <div className="relative z-20 -mt-20 px-4">
-        <div className="mx-auto max-w-4xl bg-white p-6 md:p-8 rounded-2xl shadow-2xl">
-          <Tabs defaultValue="round" onValueChange={setTripType}>
-            <TabsList className="grid w-full grid-cols-2 mb-6">
-              <TabsTrigger value="round">往復</TabsTrigger>
-              <TabsTrigger value="oneway">片道</TabsTrigger>
-            </TabsList>
+        {/* フォームセクション */}
+        <div className="relative z-20 -mt-20 px-4">
+          <div className="mx-auto max-w-4xl bg-white p-6 md:p-8 rounded-2xl shadow-2xl">
+            <Tabs defaultValue="round" onValueChange={setTripType}>
+              <TabsList className="grid w-full grid-cols-2 mb-6">
+                <TabsTrigger value="round">往復</TabsTrigger>
+                <TabsTrigger value="oneway">片道</TabsTrigger>
+              </TabsList>
 
-            <form>
-              {/* 出発地と目的地 */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                <div>
-                  <Label htmlFor="from" className="text-gray-700">出発地</Label>
-                  <Input 
-                    id="from" 
-                    name="from" 
-                    placeholder="東京（羽田/成田）" 
-                    className="mt-1" 
-                    required 
-                    value={from}
-                    onChange={(e) => setFrom(e.target.value)}
-                    />
-                </div>
-                <div>
-                  <Label htmlFor="to" className="text-gray-700">目的地</Label>
-                  <Input 
-                    id="to" 
-                    name="to" 
-                    placeholder="大阪（関西）" 
-                    className="mt-1" 
-                    required 
-                    value={to}
-                    onChange={(e) => setTo(e.target.value)}
-                    />
-                </div>
-              </div>
-
-              {/* 日付と人数 */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-                <div>
-                  <Label htmlFor="departure-date" className="text-gray-700">出発日</Label>
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      {/* departureDateがからでなければ日付を表示 */}
-                      <Button variant="outline" className="w-full mt-1 text-left">
-                        <CalendarIcon className="mr-2 h-4 w-4" />
-                        {departureDate ? (
-                          format(departureDate, 'yyyy/MM/dd HH:mm')
-                        ): (
-                          <span>日付を選択</span>
-                        )}
-                      </Button>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0">
-                      <div className="sm:flex">
-                        <Calendar 
-                          mode="single"
-                          selected={departureDate}
-                          onSelect={handleDepartureDateSelect}
-                          initialFocus
-                          disabled={(departureDate) => departureDate < new Date()}
-                          className="rounded-md border" />
-                        <div className="flex flex-col sm:flex-row sm:h-[300px] divide-y sm:divide-y-0 sm:divide-x">
-                          <ScrollArea className="w-64 sm:w-auto">
-                            <div className="flex sm:flex-col p-2">
-                              {dHours.reverse().map((hour) => (
-                                <Button
-                                key={hour}
-                                size="icon"
-                                variant={dDate && dDate.getHours() == hour ? "default" : "ghost"}
-                                className="sm:w-full shrink-0 aspect-square"
-                                onClick={() => handleDepartureTimeChange("hour", hour.toString())}
-                                >
-                                  {hour}
-                                </Button>
-                              ))}
-                            </div>
-                            <ScrollBar orientation="horizontal" className="sm:hidden" />
-                          </ScrollArea>
-                          <ScrollArea className="w-64 sm:w-auto">
-                            <div className="flex sm:flex-col p-2">
-                              {Array.from({ length:12 },(_, i) => i * 5).map((minute) => (
-                                <Button
-                                key={minute}
-                                size="icon"
-                                variant={dDate && dDate.getMinutes() == minute ? "default" : "ghost"}
-                                className="sm:w-full shrink-0 aspect-square"
-                                onClick={() => handleDepartureTimeChange("minute", minute.toString())}
-                                >
-                                  {minute.toString().padStart(2, '0')}
-                                </Button>
-                              ))}
-                            </div>
-                            <ScrollBar orientation="horizontal" className="sm:hidden" />
-                          </ScrollArea>
-                        </div>
-                      </div>
-                    </PopoverContent>
-                  </Popover>
-                </div>
-
-                {tripType == "round" && (
+              <form>
+                {/* 出発地と目的地 */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                   <div>
-                  <Label htmlFor="departure-date" className="text-gray-700">帰国日</Label>
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      {/* departureDateがからでなければ日付を表示 */}
-                      <Button variant="outline" className="w-full mt-1 text-left">
-                        <CalendarIcon className="mr-2 h-4 w-4" />
-                        {returnDate ? (
-                          format(returnDate, 'yyyy/MM/dd HH:mm')
-                        ): (
-                          <span>日付を選択</span>
-                        )}
-                      </Button>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0">
-                      <div className="sm:flex">
-                        <Calendar 
-                          mode="single"
-                          selected={returnDate}
-                          onSelect={handleReturnDateSelect}
-                          initialFocus
-                          disabled={(returnDate) => returnDate < new Date()}
-                          className="rounded-md border" />
-                        <div className="flex flex-col sm:flex-row sm:h-[300px] divide-y sm:divide-y-0 sm:divide-x">
-                          <ScrollArea className="w-64 sm:w-auto">
-                            <div className="flex sm:flex-col p-2">
-                              {rHours.reverse().map((hour) => (
-                                <Button
-                                key={hour}
-                                size="icon"
-                                variant={rDate && rDate.getHours() == hour ? "default" : "ghost"}
-                                className="sm:w-full shrink-0 aspect-square"
-                                onClick={() => handleReturnTimeChange("hour", hour.toString())}
-                                >
-                                  {hour}
-                                </Button>
-                              ))}
-                            </div>
-                            <ScrollBar orientation="horizontal" className="sm:hidden" />
-                          </ScrollArea>
-                          <ScrollArea className="w-64 sm:w-auto">
-                            <div className="flex sm:flex-col p-2">
-                              {Array.from({ length:12 },(_, i) => i * 5).map((minute) => (
-                                <Button
-                                key={minute}
-                                size="icon"
-                                variant={dDate && dDate.getMinutes() == minute ? "default" : "ghost"}
-                                className="sm:w-full shrink-0 aspect-square"
-                                onClick={() => handleReturnTimeChange("minute", minute.toString())}
-                                >
-                                  {minute.toString().padStart(2, '0')}
-                                </Button>
-                              ))}
-                            </div>
-                            <ScrollBar orientation="horizontal" className="sm:hidden" />
-                          </ScrollArea>
-                        </div>
-                      </div>
-                    </PopoverContent>
-                  </Popover>
+                    <Label htmlFor="from" className="text-gray-700">出発地</Label>
+                    <select
+                      id="from"
+                      name="from"
+                      className="mt-1 border rounded p-2 w-full"
+                      required
+                      value={from}
+                      onChange={(e) => setFrom(e.target.value)}
+                    >
+                      <option value="">空港を選択してください</option>
+                      <option value="HND">羽田空港 (東京) - HND</option>
+                      <option value="NRT">成田国際空港 (千葉) - NRT</option>
+                      <option value="KIX">関西国際空港 (大阪) - KIX</option>
+                      <option value="ITM">大阪国際空港（伊丹）- ITM</option>
+                      <option value="NGO">中部国際空港 (愛知) - NGO</option>
+                      <option value="CTS">新千歳空港 (北海道) - CTS</option>
+                      <option value="SDJ">仙台空港 (宮城) - SDJ</option>
+                      <option value="FUK">福岡空港 (福岡) - FUK</option>
+                      <option value="OKA">那覇空港 (沖縄) - OKA</option>
+                      <option value="KOJ">鹿児島空港 (鹿児島) - KOJ</option>
+                      <option value="HIJ">広島空港 (広島) - HIJ</option>
+                      <option value="TAK">高松空港 (香川) - TAK</option>
+                      <option value="MYJ">松山空港 (愛媛) - MYJ</option>
+                      <option value="KMJ">熊本空港 (熊本) - KMJ</option>
+                      <option value="KMQ">小松空港 (石川) - KMQ</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <Label htmlFor="to" className="text-gray-700">目的地</Label>
+                    <select
+                      id="to"
+                      name="to"
+                      className="mt-1 border rounded p-2 w-full"
+                      required
+                      value={to}
+                      onChange={(e) => setTo(e.target.value)}
+                    >
+                      <option value="">空港を選択してください</option>
+                      <option value="HND">羽田空港 (東京) - HND</option>
+                      <option value="NRT">成田国際空港 (千葉) - NRT</option>
+                      <option value="KIX">関西国際空港 (大阪) - KIX</option>
+                      <option value="ITM">大阪国際空港（伊丹）- ITM</option>
+                      <option value="NGO">中部国際空港 (愛知) - NGO</option>
+                      <option value="CTS">新千歳空港 (北海道) - CTS</option>
+                      <option value="SDJ">仙台空港 (宮城) - SDJ</option>
+                      <option value="FUK">福岡空港 (福岡) - FUK</option>
+                      <option value="OKA">那覇空港 (沖縄) - OKA</option>
+                      <option value="KOJ">鹿児島空港 (鹿児島) - KOJ</option>
+                      <option value="HIJ">広島空港 (広島) - HIJ</option>
+                      <option value="TAK">高松空港 (香川) - TAK</option>
+                      <option value="MYJ">松山空港 (愛媛) - MYJ</option>
+                      <option value="KMJ">熊本空港 (熊本) - KMJ</option>
+                      <option value="KMQ">小松空港 (石川) - KMQ</option>
+                    </select>
+                  </div>
                 </div>
-                )}
 
-                <div>
-                  <Label htmlFor="passengers" className="text-gray-700">搭乗者数</Label>
-                  <Select defaultValue="1">
-                    <SelectTrigger className="w-full mt-1">
-                      <SelectValue placeholder="搭乗者数を選択" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="1">1名</SelectItem>
-                      <SelectItem value="2">2名</SelectItem>
-                      <SelectItem value="3">3名</SelectItem>
-                      <SelectItem value="4">4名</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-
-              {/* 検索ボタン */}
-              <Button 
-                type="submit"
-                disabled={loading} 
-                className="w-full bg-blue-600 hover:bg-blue-700 text-white text-lg"
-                onClick={() => {
-                    callAPI(tokens)
-                }}>
-                  {loading ? "検索中..." : "検索する"}
-              </Button>
-              {loading && !result && (
-                <p className="text-gray-600 text-center mt-4">フライトを検索中です...</p>
-              )}
-              {!loading && result.length > 0 && (
-                <div className="mt-6 space-y-6">
-                  <h2 className="text-xl font-bold">検索結果</h2>
-
-                  {tripType === "oneway" && (
-                    // 片道 → 現状のまま
-                    result.map((res, index) => {
-                      const segment = res;
-                      if (!segment) return null;
-                      return (
-                        <div key={index} className="border rounded p-4 shadow">
-                          {segment.logoUrl ?
-                            <Image src={segment.logoUrl} width={50} height={50} alt="logo" /> :
-                            "不明"
-                          }
-                          <p><strong>出発地:</strong> {segment.departureAirport}</p>
-                          <p><strong>到着地:</strong> {segment.arrivalAirport}</p>
-                          <p><strong>出発時刻:</strong> {segment.departureTime}</p>
-                          <p><strong>到着時刻:</strong> {segment.arrivalTime}</p>
-                          <p><strong>フライト時間:</strong> {segment.duration}</p>
-                          <p><strong>トータル:</strong> {segment.totalPrice}</p>
-                          <p><strong>税金:</strong> {segment.taxPrice}</p>
-                          <p><strong>ベース:</strong> {segment.basePrice}</p>
-                          <Link href={`/flight/${index}`} className="text-blue-500">
-                            Read More
-                          </Link>
-                          {status && 
-                            <div className="flex justify-end mt-2 mb-4">
-                              <button
-                                onClick={() => toggleFavorite(index)}
-                                className={`flex items-center gap-1 px-3 py-1 rounded transition-colors duration-200 ${
-                                  segment.isFavorite ? 'bg-red-500 text-white' : 'bg-gray-200 text-gray-800'
-                                }`}
-                              >
-                                Favorite
-                              </button>
-                            </div>
-                          }
+                {/* 日付と人数 */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                  <div>
+                    <Label htmlFor="departure-date" className="text-gray-700">出発日</Label>
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        {/* departureDateがからでなければ日付を表示 */}
+                        <Button variant="outline" className="w-full mt-1 text-left">
+                          <CalendarIcon className="mr-2 h-4 w-4" />
+                          {departureDate ? (
+                            format(departureDate, 'yyyy/MM/dd')
+                          ): (
+                            <span>日付を選択</span>
+                          )}
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-auto p-0">
+                        <div className="sm:flex">
+                          <Calendar 
+                            mode="single"
+                            selected={departureDate}
+                            onSelect={handleDepartureDateSelect}
+                            initialFocus
+                            disabled={(departureDate) => departureDate < new Date()}
+                            className="rounded-md border" />
                         </div>
-                      );
-                    })
+                      </PopoverContent>
+                    </Popover>
+                  </div>
+
+                  {tripType == "round" && (
+                    <div>
+                    <Label htmlFor="departure-date" className="text-gray-700">帰国日</Label>
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        {/* departureDateがからでなければ日付を表示 */}
+                        <Button variant="outline" className="w-full mt-1 text-left">
+                          <CalendarIcon className="mr-2 h-4 w-4" />
+                          {returnDate ? (
+                            format(returnDate, 'yyyy/MM/dd')
+                          ): (
+                            <span>日付を選択</span>
+                          )}
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-auto p-0">
+                        <div className="sm:flex">
+                          <Calendar 
+                            mode="single"
+                            selected={returnDate}
+                            onSelect={handleReturnDateSelect}
+                            initialFocus
+                            disabled={(returnDate) => returnDate < new Date()}
+                            className="rounded-md border" />
+                        </div>
+                      </PopoverContent>
+                    </Popover>
+                  </div>
                   )}
 
-                  {tripType === "round" && (
-                    <div className="space-y-6">
-                      {result.reduce((pairs: { flights: FlightListInterface[], startIndex: number }[], _, i) => {
-                        if (i % 2 === 0) pairs.push({ flights: result.slice(i, i + 2), startIndex: i });
-                        return pairs;
-                      }, []).map((pair, setIndex) => {
-                        // 合計金額計算
-                        const totalSum = pair.flights.reduce((sum, flight) => {
-                          const price = flight.totalPrice ? parseInt(flight.totalPrice.replace(/,/g, "")) : 0;
-                          return sum + price;
-                        }, 0);
+                  <div>
+                    <Label htmlFor="passengers" className="text-gray-700">搭乗者数</Label>
+                    <Select onValueChange={handlePassengers} defaultValue="1">
+                      <SelectTrigger className="w-full mt-1">
+                        <SelectValue placeholder="搭乗者数を選択" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="1">1名</SelectItem>
+                        <SelectItem value="2">2名</SelectItem>
+                        <SelectItem value="3">3名</SelectItem>
+                        <SelectItem value="4">4名</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
 
+                {/* 検索ボタン */}
+                <Button 
+                  type="submit"
+                  disabled={loading} 
+                  className="w-full bg-blue-600 hover:bg-blue-700 text-white text-lg"
+                  onClick={() => {
+                      callAPI()
+                  }}>
+                    {loading ? "検索中..." : "検索する"}
+                </Button>
+                {loading && !result && (
+                  <p className="text-gray-600 text-center mt-4">フライトを検索中です...</p>
+                )}
+                {!loading && result.length > 0 && (
+                  <div className="mt-6 space-y-6">
+                    <h2 className="text-xl font-bold">検索結果</h2>
+
+                    {tripType === "oneway" && (
+                      // 片道 → 現状のまま
+                      result.map((res, index) => {
+                        const segment = res;
+                        if (!segment) return null;
                         return (
-                          <div key={setIndex} className="border rounded-lg p-4 shadow bg-white">
-                            <h3 className="font-bold text-lg mb-4">往復セット {setIndex + 1}</h3>
-                            <div className="grid md:grid-cols-2 gap-4">
-                              {pair.flights.map((res, idx) => {
-                                const globalIndex = pair.startIndex + idx; // result配列でのインデックス
-                                return (
-                                  <div key={idx} className="border rounded p-4 bg-gray-50">
-                                    <div className="flex items-center gap-3 mb-2">
-                                      <Image src={res.logoUrl || "/no-logo.png"} width={40} height={40} alt="logo" />
-                                      <p className="font-semibold">{res.departureAirport} → {res.arrivalAirport}</p>
-                                    </div>
-                                    <p><strong>出発:</strong> {res.departureTime}</p>
-                                    <p><strong>到着:</strong> {res.arrivalTime}</p>
-                                    <p><strong>所要時間:</strong> {res.duration}</p>
-                                    <p><strong>料金:</strong> {res.totalPrice}円</p>
-
-                                    {/* お気に入りボタン */}
-                                    {status && (
-                                      <div className="flex justify-end mt-3">
-                                        <button
-                                          onClick={() => toggleFavorite(globalIndex)}
-                                          className={`px-3 py-1 rounded ${
-                                            res.isFavorite ? 'bg-red-500 text-white' : 'bg-gray-200 text-gray-800'
-                                          }`}
-                                        >
-                                          Favorite
-                                        </button>
-                                      </div>
-                                    )}
-                                  </div>
-                                );
-                              })}
-                            </div>
-                            {/* 合計金額表示 */}
-                            <p className="mt-4 text-right font-bold text-lg">
-                              往復合計: {totalSum.toLocaleString()}円
-                            </p>
+                          <div key={index} className="border rounded p-4 shadow">
+                            {segment.logoUrl ?
+                              <Image src={segment.logoUrl} width={50} height={50} alt="logo" /> :
+                              "不明"
+                            }
+                            <p><strong>出発地:</strong> {segment.departureAirport}</p>
+                            <p><strong>到着地:</strong> {segment.arrivalAirport}</p>
+                            <p><strong>出発時刻:</strong> {segment.departureTime}</p>
+                            <p><strong>到着時刻:</strong> {segment.arrivalTime}</p>
+                            <p><strong>フライト時間:</strong> {segment.duration}</p>
+                            <p><strong>トータル:</strong> {segment.totalPrice}</p>
+                            <p><strong>税金:</strong> {segment.taxPrice}</p>
+                            <p><strong>ベース:</strong> {segment.basePrice}</p>
+                            {/* モーダルで作成 react-modal */}
+                            <Link href={{
+                              pathname: `/flight/${index}`,
+                              query: { flight: JSON.stringify(segment) },
+                            }} className="text-blue-500">
+                              Read More
+                            </Link>
+                            {status && 
+                              <div className="flex justify-end mt-2 mb-4">
+                                <button
+                                  onClick={() => toggleFavorite(index)}
+                                  className={`flex items-center gap-1 px-3 py-1 rounded transition-colors duration-200 ${
+                                    segment.isFavorite ? 'bg-red-500 text-white' : 'bg-gray-200 text-gray-800'
+                                  }`}
+                                >
+                                  Favorite
+                                </button>
+                              </div>
+                            }
                           </div>
                         );
-                      })}
-                    </div>
-                  )}
-                </div>
-              )}
-            </form>
-          </Tabs>
+                      })
+                    )}
+
+                    {tripType === "round" && (
+                      <div className="space-y-6">
+                        {result.reduce((pairs: { flights: FlightListInterface[], startIndex: number }[], _, i) => {
+                          if (i % 2 === 0) pairs.push({ flights: result.slice(i, i + 2), startIndex: i });
+                          return pairs;
+                        }, []).map((pair, setIndex) => {
+                          // 合計金額計算
+                          const totalSum = pair.flights.reduce((sum, flight) => {
+                            const price = flight.totalPrice ? parseInt(flight.totalPrice.replace(/,/g, "")) : 0;
+                            return sum + price;
+                          }, 0);
+                          
+                          return (
+                            <div key={setIndex} className="border rounded-lg p-4 shadow bg-white">
+                              <h3 className="font-bold text-lg mb-4">往復セット {setIndex + 1}</h3>
+                              <div className="grid md:grid-cols-2 gap-4">
+                                {pair.flights.map((res, idx) => {
+                                  const globalIndex = pair.startIndex + idx; // result配列でのインデックス
+                                  return (
+                                    <div key={idx} className="border rounded p-4 bg-gray-50">
+                                      <div className="flex items-center gap-3 mb-2">
+                                        <Image src={res.logoUrl || "/no-logo.png"} width={40} height={40} alt="logo" />
+                                        <p className="font-semibold">{res.departureAirport} → {res.arrivalAirport}</p>
+                                      </div>
+                                      <p><strong>出発:</strong> {res.departureTime}</p>
+                                      <p><strong>到着:</strong> {res.arrivalTime}</p>
+                                      <p><strong>所要時間:</strong> {res.duration}</p>
+                                      <p><strong>料金:</strong> {res.totalPrice}円</p>
+
+                                      {/* お気に入りボタン */}
+                                      {status && (
+                                        <div className="flex justify-end mt-3">
+                                          <button
+                                            onClick={() => toggleFavorite(globalIndex)}
+                                            className={`px-3 py-1 rounded ${
+                                              res.isFavorite ? 'bg-red-500 text-white' : 'bg-gray-200 text-gray-800'
+                                            }`}
+                                          >
+                                            Favorite
+                                          </button>
+                                        </div>
+                                      )}
+                                    </div>
+                                  );
+                                })}
+                              </div>
+                              {/* 合計金額表示 */}
+                              <p className="mt-4 text-right font-bold text-lg">
+                                往復合計: {totalSum.toLocaleString()}円
+                              </p>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </div>
+                )}
+              </form>
+            </Tabs>
+          </div>
         </div>
       </div>
     </div>
-    </div>
-
-  );
+  )
 }
