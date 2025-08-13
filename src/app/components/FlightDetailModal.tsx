@@ -14,12 +14,15 @@ export default function FlightDetailModal({ isOpen, onRequestClose, flightData }
     <Modal
       isOpen={isOpen}
       onRequestClose={onRequestClose}
+      className={`relative z-[99] h-screen w-screen bg-black/80`}
+      overlayClassName="fixed inset-0 bg-black_main bg-opacity-60 flex items-center justify-center z-[99]"
       contentLabel="フライト詳細"
       style={{
         content: {
-          maxWidth: "600px",
+          maxWidth: "500px",
           margin: "auto",
           padding: "20px",
+          backgroundColor: "white"
         },
         overlay: {
           backgroundColor: "rgba(0, 0, 0, 0.5)",

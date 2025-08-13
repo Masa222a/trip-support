@@ -398,22 +398,14 @@ export default function FlightSearch() {
                             <p><strong>到着時刻:</strong> {segment.arrivalTime}</p>
                             <p><strong>フライト時間:</strong> {segment.duration}</p>
                             <p><strong>トータル:</strong> {segment.totalPrice}</p>
-                            {/* <p><strong>税金:</strong> {segment.taxPrice}</p>
-                            <p><strong>ベース:</strong> {segment.basePrice}</p> */}
-                            {/* モーダルで作成 react-modal */}
+                            
                             <button 
                               onClick={() => openModal(segment)}
                               className="mt-4 px-2 py-2 bg-blue-200 border border-blue-300 text-blue-700 rounded hover:bg-blue-100 transition duration-150 focus:outline-none focus:ring-2 focus:ring-blue-400"
                               >
                               詳細を見る
                             </button>
-
-                            <FlightDetailModal
-                              isOpen={modalIsOpen}
-                              onRequestClose={closeModal}
-                              flightData={selectedFlight}
-                            />
-
+                          
                             {status && 
                               <div className="flex justify-end mt-2 mb-4">
                                 <button
@@ -486,6 +478,11 @@ export default function FlightSearch() {
                         })}
                       </div>
                     )}
+                    <FlightDetailModal
+                      isOpen={modalIsOpen}
+                      onRequestClose={closeModal}
+                      flightData={selectedFlight}
+                    />
                   </div>
                 )}
               </form>
