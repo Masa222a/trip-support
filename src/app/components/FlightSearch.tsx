@@ -25,12 +25,10 @@ import { format } from "date-fns"
 import { CalendarIcon } from "lucide-react";
 import dayjs from 'dayjs';
 import { FlightListInterface } from '@/types/FlightList'
-import Link from "next/link";
 import Image from 'next/image'
 import { createClient } from "@/lib/supabase/client"
 import Header from "./layouts/header/header"
 import flightData from '../../../data/flightData'
-import Modal from 'react-modal'
 import FlightDetailModal from "./FlightDetailModal";
 
 export default function FlightSearch() {
@@ -137,6 +135,8 @@ export default function FlightSearch() {
     //   url = `https://booking-com15.p.rapidapi.com/api/v1/flights/searchFlights?fromId=${from}.AIRPORT&toId=${to}.AIRPORT&departDate=${departureDate}&stops=none&pageNo=1&adults=${passenger}&children=0%2C17&sort=CHEAPEST&cabinClass=ECONOMY&currency_code=JPY`;
     // }
     // const apiKey = '00f2ce223fmsh839dbcfe2809209p199576jsna9c13a41c967'
+    // 新しい方
+    // const apiKey = '06c02e7126msh31a71a1e9217569p1e4961jsnf6482c0d0134'
     // const host = 'booking-com15.p.rapidapi.com'
     // const options = {
     //   method: 'GET',
@@ -366,7 +366,7 @@ export default function FlightSearch() {
 
                 {/* 検索ボタン */}
                 <Button 
-                  type="submit"
+                  type="button"
                   disabled={loading} 
                   className="w-full bg-blue-600 hover:bg-blue-700 text-white text-lg"
                   onClick={() => {
