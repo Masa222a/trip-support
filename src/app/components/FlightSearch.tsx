@@ -134,10 +134,9 @@ export default function FlightSearch() {
     // } else {
     //   url = `https://booking-com15.p.rapidapi.com/api/v1/flights/searchFlights?fromId=${from}.AIRPORT&toId=${to}.AIRPORT&departDate=${departureDate}&stops=none&pageNo=1&adults=${passenger}&children=0%2C17&sort=CHEAPEST&cabinClass=ECONOMY&currency_code=JPY`;
     // }
-    // const apiKey = '00f2ce223fmsh839dbcfe2809209p199576jsna9c13a41c967'
-    // 新しい方
-    // const apiKey = '06c02e7126msh31a71a1e9217569p1e4961jsnf6482c0d0134'
-    // const host = 'booking-com15.p.rapidapi.com'
+    // const apiKey = process.env.RAPIDAPI_KEY
+    // const host = process.env.RAPIDAPI_HOST
+
     // const options = {
     //   method: 'GET',
     //   headers: {
