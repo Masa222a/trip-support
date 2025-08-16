@@ -10,7 +10,7 @@ type GptPlan = {
   activities: string[]
 }
 
-const chatgptPage = () => {
+const ChatgptPage = () => {
   const [plan, setPlan] = useState<GptPlan[]>([])
 
   const handleFormSubmit = async (form: GPTPrompt) => {
@@ -35,10 +35,4 @@ const chatgptPage = () => {
   )
 }
 
-export default chatgptPage
-
-// uiとどのように実行するかの流れから考える
-// 選択肢を考える
-
-// 生成AIの他の候補を余裕があれば探す
-// 予算感を調べる
+export default ChatgptPage
