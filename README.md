@@ -1,36 +1,73 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+・マークダウン記法
+・デモURL
+・デモアカウント
+・要件定義の内容
+・機能一覧
+・フレームワークやライブラリ
+・外部API
 
-## Getting Started
+# trip support
+公開URL:()<br/>
+デモアカウント（すぐに試せます）<br/>
+Email:spotide.demo.test@gmail.com<br/>
+Password:testtest
 
-First, run the development server:
+## 作成期間
+* 仕様・デザイン検討：2025年5月10日〜（合計：240分＝約4時間）
+* アプリ開発：2025年5月24日〜8月16日（合計：2600分＝約13時間）
+* 🕒 合計作業時間：2,840分（約17時間）
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## 技術スタック
+フロントエンド
+* Next.js（App Router構成）
+* TypeScript：型安全な開発
+* Tailwind CSS：ユーティリティファーストなCSSフレームワーク
+* react-modal：モーダルウィンドウUI
+* shadcn：UIコンポーネント集
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## バックエンド / インフラ
+* Supabase：認証、データベース（PostgreSQL）
+* 状態管理 / ロジック
+* uuid：ユニークID生成
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 外部API
+* [OpenAI](https://openai.com/ja-JP/api/)
+  
+* [Rapid API](https://rapidapi.com/)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+💡 コンセプト
+* 趣味で行っていた旅行時のフライト情報を検索できるアプリ。
+* Chat GPTを使用して、数日間の旅行モデルプランが気軽に立てれるようにしたい。
 
-## Learn More
+🎯 ターゲット
+* 20〜40代の社会人
+* 旅行を検討しているが、プランを検討中の方
 
-To learn more about Next.js, take a look at the following resources:
+📱 利用シーン<br/>
+旅行に行く際のフライトの値段や時刻を確認する手助けをする
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+🔁 利用の流れ<br/>
+* ユーザー登録（メール認証）
+* 条件を設定（空港名、日程、片道・往復、人数）
+  - 行き先：例）KIX → HND
+  - 日時：例）10月10日
+  - 片道 or 往復：例）往復
+  - 人数：例）一人
+* 検索したフライトの結果からお気に入り登録でストック
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+🧑‍💻 なぜこれを行うのか<br/>
+自分自身が計画したりすることが苦手で、「休日に気軽に旅行ができるようにしたい」という思いから。<br/>
+また、自分でも使いたいプロダクトを通して React / Next.js / Supabase のスキルを最大限活かせると考えたため。
 
-## Deploy on Vercel
+✅ 最低限機能
+* ユーザー登録・ログイン（Supabase Auth）
+* フライトを検索する
+* お気に入り登録を行う
+* 簡単な旅行のモデルプランを自動生成
+* 他の交通機関の候補を表示する（今後実装予定）
+* 目的地での食事処や観光名所を表示する（今後実装予定）
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+✨ 今後実装予定の機能
+* 他の交通機関の候補を表示する
+* 目的地での食事処や観光名所を表示する
+* 画面の色味切り替え（ダークモード、ライトモード）
