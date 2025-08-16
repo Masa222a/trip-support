@@ -3,7 +3,6 @@ import { createClient } from "@/lib/supabase/client";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { LogoutButton } from "../../logout-button";
-// import { LogoutButton } from "../../logout-button";
 
 const Header = () => {
   const supabase = createClient()
@@ -11,7 +10,6 @@ const Header = () => {
   useEffect(() => {
     (async() => {
       const { data } = await supabase.auth.getUser()
-      // console.log(`----data:${JSON.stringify(data)}`)
       if (data.user != null) {
         setStatus(data.user.id)
       } else {
@@ -22,7 +20,6 @@ const Header = () => {
   
 
 
-  // console.log(`user status header: ${JSON.stringify(data.user)}`)
 
   return (
     <div className="divide-y border-gray-200 dark:border-gray-800 border-b">

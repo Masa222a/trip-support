@@ -4,7 +4,6 @@ import {
   TabsList,
   TabsTrigger,
 } from "@/components/ui/tabs";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import {
@@ -40,7 +39,7 @@ export default function FlightSearch() {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<FlightListInterface[]>([]);
   const [status, setStatus] = useState("")
-  const [tokens, setToken] = useState([])
+  const [tokens, setToken] = useState<string[]>([])
   const [passenger, setPassenger] = useState("")
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [selectedFlight, setSelectedFlight] = useState<FlightListInterface | null>(null)
@@ -82,57 +81,67 @@ export default function FlightSearch() {
         return res
       }
     }))
+
     const { data } = await supabase.auth.getUser()
-    // 取得までの時間をローディングさせるように新しく作成
-    const postData = await supabase
-    .from('Post')
-    .insert({
-      user_id: data.user.id,
-      departure_point: result[id].departureAirport,
-      arrival_point: result[id].arrivalAirport,
-      flight_time: result[id].duration,
-      total_price: result[id].totalPrice,
-      logo_url: result[id].logoUrl,
-      tax_price: result[id].taxPrice,
-      base_price: result[id].basePrice,
-      departure_at: result[id].departureTime,
-      arrival_at: result[id].arrivalTime
-    })
-    .select()
-    
-    const favoriteData = await supabase
-    .from('Favorite')
-    .insert({
-      user_id: data.user.id,
-      post_id_arrival: postData.data[0].id,
-      post_id_departure: null,
-      token: result[id].token
-    })
+    if (data.user != null) {
+      const postData = await supabase
+      .from('Post')
+      .insert({
+        user_id: data.user.id,
+        departure_point: result[id].departureAirport,
+        arrival_point: result[id].arrivalAirport,
+        flight_time: result[id].duration,
+        total_price: result[id].totalPrice,
+        logo_url: result[id].logoUrl,
+        tax_price: result[id].taxPrice,
+        base_price: result[id].basePrice,
+        departure_at: result[id].departureTime,
+        arrival_at: result[id].arrivalTime
+      })
+      .select()
+      
+      if (postData.data != null) {
+        await supabase
+        .from('Favorite')
+        .insert({
+          user_id: data.user.id,
+          post_id_arrival: postData.data[0].id,
+          post_id_departure: null,
+          token: result[id].token
+        })
+      } else {
+        console.log('postDataがnullです。')
+      }
+    } else {
+      alert('ログインしてからご利用ください。')
+    }
   };
 
   const handleDepartureDateSelect = (departureDate: Date | undefined) => {
     if (!departureDate) return
     
-    const formattedDate = departureDate.toISOString().split("T")[0];
-    setDepartureDate(formattedDate)
+    setDepartureDate(departureDate)
   }
 
   const handleReturnDateSelect = (returnDate: Date | undefined) => {
     if (!returnDate) return
-    
-    const formattedDate = returnDate.toISOString().split("T")[0];
-    setReturnDate(formattedDate)
+
+    setReturnDate(returnDate)
   };
 
   const callAPI = async () => {
     setLoading(true)
     setResult([])
-
     // let url = ""
-    // if (tripType == 'round') {
-    //   url = `https://booking-com15.p.rapidapi.com/api/v1/flights/searchFlights?fromId=${from}.AIRPORT&toId=${to}.AIRPORT&departDate=${departureDate}&returnDate=${returnDate}&stops=none&pageNo=1&adults=${passenger}&children=0%2C17&sort=CHEAPEST&cabinClass=ECONOMY&currency_code=JPY`;
-    // } else {
-    //   url = `https://booking-com15.p.rapidapi.com/api/v1/flights/searchFlights?fromId=${from}.AIRPORT&toId=${to}.AIRPORT&departDate=${departureDate}&stops=none&pageNo=1&adults=${passenger}&children=0%2C17&sort=CHEAPEST&cabinClass=ECONOMY&currency_code=JPY`;
+    // if (departureDate && returnDate) {
+    //   const dDate = departureDate.toISOString().split("T")[0];
+    //   const rDate = returnDate.toISOString().split("T")[0];
+      
+    //   if (tripType == 'round') {
+    //     url = `https://booking-com15.p.rapidapi.com/api/v1/flights/searchFlights?fromId=${from}.AIRPORT&toId=${to}.AIRPORT&departDate=${dDate}&returnDate=${rDate}&stops=none&pageNo=1&adults=${passenger}&children=0%2C17&sort=CHEAPEST&cabinClass=ECONOMY&currency_code=JPY`;
+    //   } else {
+    //     url = `https://booking-com15.p.rapidapi.com/api/v1/flights/searchFlights?fromId=${from}.AIRPORT&toId=${to}.AIRPORT&departDate=${dDate}&stops=none&pageNo=1&adults=${passenger}&children=0%2C17&sort=CHEAPEST&cabinClass=ECONOMY&currency_code=JPY`;
+    //   }
     // }
     // const apiKey = process.env.RAPIDAPI_KEY
     // const host = process.env.RAPIDAPI_HOST
@@ -143,7 +152,8 @@ export default function FlightSearch() {
     //     'X-RapidAPI-Key': apiKey!,
     //     'X-RapidAPI-Host': host!
     //   }
-    // };
+    // }
+    
     try {
       // const res = await fetch(url, options);
       // const flightData = await res.json();
@@ -152,14 +162,14 @@ export default function FlightSearch() {
 
       const flightList:FlightListInterface[] = []
       // typeやモデルを定義して、それを元にデータの受け渡しを行う
-      items.forEach((item: any) => {
-        item.segments.forEach((segment: any, segIndex: number) => {
+      items.forEach((item) => {
+        item.segments.forEach((segment, segIndex: number) => {
           const durationSeconds = segment.totalTime || 0;
           const hours = Math.floor(durationSeconds / 3600);
           const minutes = Math.floor((durationSeconds % 3600) / 60);
           const duration = `${hours}時間${minutes}分`
           const logo = segment.legs[0].carriersData[0].logo;
-          // api側で梱包まで行うのが良い
+          // cSpell:ignore traveller
           const totalPrice = item.travellerPrices?.[0].travellerPriceBreakdown?.total.units.toLocaleString()
           const basePrice =  item.travellerPrices?.[0].travellerPriceBreakdown?.baseFare.units.toLocaleString()
           const taxPrice =  item.travellerPrices?.[0].travellerPriceBreakdown?.tax.units.toLocaleString()
