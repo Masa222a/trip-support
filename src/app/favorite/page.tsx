@@ -3,10 +3,27 @@
 import { useEffect, useState } from 'react'
 import Header from '../components/layouts/header/header';
 import { createClient } from "@/lib/supabase/client"
+import Image from "next/image"
 
+type Post = {
+  id: number
+  departure_point: string
+  flight_time: string
+  departure_at: string
+  arrival_at: string
+  arrival_point: string
+  base_price: string
+  logo_url: string
+  tax_price: string
+  total_price: string
+}
 
-export default function favoritePage() {
-  const [posts, setPosts] = useState([])
+type FavoriteWithPost = {
+  Post: Post[]
+}
+
+export default function FavoritePage() {
+  const [posts, setPosts] = useState<FavoriteWithPost[]>([])
   const supabase = createClient()
   useEffect(() => {
     (async() => {
@@ -62,10 +79,12 @@ export default function favoritePage() {
               </p>
             </div>
             {item.Post.logo_url && (
-              <img
+              <Image
                 src={item.Post.logo_url}
                 alt="航空会社ロゴ"
-                className="h-10 w-auto object-contain"
+                width={40}
+                height={40}
+                className="object-contain"
               />
             )}
           </div>
