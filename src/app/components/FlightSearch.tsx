@@ -50,22 +50,23 @@ export default function FlightSearch() {
       const { data } = await supabase.auth.getUser()
       if (data.user != null) {
         setStatus(data.user.id)
+        const favData = await supabase
+        .from("Favorite")
+        .select("*")
+        .eq("user_id", data.user.id)  
+        .not('token', 'is', null)
+        if (favData.data != null) {
+          const tokenArray = favData.data
+          .filter(item => item.token)
+          .map(item => item.token);
+          setToken(tokenArray)
+        } else {
+          setToken([])
+        }
       } else {
         setStatus("")
       }
 
-      const favData = await supabase
-      .from("Favorite")
-      .select("*")
-      .not('token', 'is', null)
-      if (favData.data != null) {
-        const tokenArray = favData.data
-        .filter(item => item.token)
-        .map(item => item.token);
-        setToken(tokenArray)
-      } else {
-        setToken([])
-      }
 
     })()
   }, [])
