@@ -1,39 +1,8 @@
-・マークダウン記法
-・デモURL
-・デモアカウント
-・要件定義の内容
-・機能一覧
-・フレームワークやライブラリ
-・外部API
-
 # trip support
 公開URL:()<br/>
 デモアカウント（すぐに試せます）<br/>
 Email:spotide.demo.test@gmail.com<br/>
 Password:testtest
-
-## 作成期間
-* 仕様・デザイン検討：2025年5月10日〜（合計：240分＝約4時間）
-* アプリ開発：2025年5月24日〜8月16日（合計：2600分＝約13時間）
-* 🕒 合計作業時間：2,840分（約17時間）
-
-## 技術スタック
-フロントエンド
-* Next.js（App Router構成）
-* TypeScript：型安全な開発
-* Tailwind CSS：ユーティリティファーストなCSSフレームワーク
-* react-modal：モーダルウィンドウUI
-* shadcn：UIコンポーネント集
-
-## バックエンド / インフラ
-* Supabase：認証、データベース（PostgreSQL）
-* 状態管理 / ロジック
-* uuid：ユニークID生成
-
-## 外部API
-* [OpenAI](https://openai.com/ja-JP/api/)
-  
-* [Rapid API](https://rapidapi.com/)
 
 💡 コンセプト
 * 趣味で行っていた旅行時のフライト情報を検索できるアプリ。
@@ -71,3 +40,38 @@ Password:testtest
 * 他の交通機関の候補を表示する
 * 目的地での食事処や観光名所を表示する
 * 画面の色味切り替え（ダークモード、ライトモード）
+
+## 作成期間
+* 仕様・デザイン検討：2025年5月10日〜（合計：240分＝約4時間）
+* アプリ開発：2025年5月24日〜8月16日（合計：2600分＝約13時間）
+* 🕒 合計作業時間：2,840分（約17時間）
+
+## 技術スタック
+## フロントエンド
+* Next.js（App Router構成）：
+  - ver:15.3.2
+* TypeScript：型安全な開発
+  - ver:5.8.3
+* Tailwind CSS：ユーティリティファーストなCSSフレームワーク
+  - ver:4.1.8
+* react-modal：モーダルウィンドウUI
+  - ver:3.16.3
+* react-day-picker：日付を管理
+  - ver:9.8.1
+* shadcn：UIコンポーネント集
+
+## バックエンド / インフラ
+* Supabase：認証、データベース（PostgreSQL）
+  - ver:2.33.9
+* Prisma：ORM
+  - ver:6.10.1
+* Vercel：デプロイ
+
+## 外部API
+* [OpenAI](https://openai.com/ja-JP/api/)
+  - 大まかな旅行モデルプランを作成する為に使用。
+  - ver:5.8.2
+  
+* [Rapid API](https://rapidapi.com/)
+  - フライトチケットの情報を取得する為に使用。
+
