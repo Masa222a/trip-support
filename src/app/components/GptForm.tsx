@@ -2,7 +2,6 @@
 
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select"
 import { useState } from "react"
-import Header from "./layouts/header/header"
 
 export type GPTPrompt = {
   location: string

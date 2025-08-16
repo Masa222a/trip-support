@@ -40,7 +40,7 @@ export default function FlightSearch() {
   const [result, setResult] = useState<FlightListInterface[]>([]);
   const [status, setStatus] = useState("")
   const [tokens, setToken] = useState<string[]>([])
-  const [passenger, setPassenger] = useState("")
+  const [passenger, setPassenger] = useState("1")
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [selectedFlight, setSelectedFlight] = useState<FlightListInterface | null>(null)
 
@@ -53,7 +53,7 @@ export default function FlightSearch() {
         const favData = await supabase
         .from("Favorite")
         .select("*")
-        .eq("user_id", data.user.id)  
+        .eq("user_id", data.user.id)
         .not('token', 'is', null)
         if (favData.data != null) {
           const tokenArray = favData.data
@@ -133,6 +133,7 @@ export default function FlightSearch() {
   const callAPI = async () => {
     setLoading(true)
     setResult([])
+    console.log(passenger)
     // let url = ""
     // if (departureDate && returnDate) {
     //   const dDate = departureDate.toISOString().split("T")[0];

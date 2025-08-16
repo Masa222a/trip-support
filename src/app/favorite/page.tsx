@@ -19,7 +19,7 @@ type Post = {
 }
 
 type FavoriteWithPost = {
-  Post: Post[]
+  Post: Post
 }
 
 export default function FavoritePage() {
@@ -44,7 +44,7 @@ export default function FavoritePage() {
     })()
   }, [])  
   
-  const handleDelete = async (id: string) => {
+  const handleDelete = async (id: number) => {
     const confirmed = window.confirm("本当に削除しますか？");
     if (!confirmed) return;
   

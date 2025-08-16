@@ -29,7 +29,7 @@ export async function POST(req: NextRequest) {
     const plan: GptPlan[] = JSON.parse(jsonText)
 
     return NextResponse.json({ plan })
-  } catch (error: any) {
+  } catch (error) {
     console.error("GPT error:", error)
     return NextResponse.json({ error: "プラン生成に失敗しました" }, { status: 500 })
   }
