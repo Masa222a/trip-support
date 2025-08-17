@@ -140,9 +140,9 @@ export default function FlightSearch() {
       const rDate = returnDate.toISOString().split("T")[0];
       
       if (tripType == 'round') {
-        url = `https://booking-com15.p.rapidapi.com/api/v1/flights/searchFlights?fromId=${from}.AIRPORT&toId=${to}.AIRPORT&departDate=${dDate}&returnDate=${rDate}&stops=none&pageNo=1&adults=${passenger}&children=0%2C17&sort=CHEAPEST&cabinClass=ECONOMY&currency_code=JPY`;
+        url = `https://booking-com15.p.rapidapi.com/api/v1/flights/searchFlights?fromId=${from}.AIRPORT&toId=${to}.AIRPORT&departDate=${dDate}&returnDate=${rDate}&stops=none&pageNo=1&adults=${passenger}&children=0%2C17&sort=CHEAPEST&cabinClass=ECONOMY&currency_code=JPY`
       } else {
-        url = `https://booking-com15.p.rapidapi.com/api/v1/flights/searchFlights?fromId=${from}.AIRPORT&toId=${to}.AIRPORT&departDate=${dDate}&stops=none&pageNo=1&adults=${passenger}&children=0%2C17&sort=CHEAPEST&cabinClass=ECONOMY&currency_code=JPY`;
+        url = `https://booking-com15.p.rapidapi.com/api/v1/flights/searchFlights?fromId=${from}.AIRPORT&toId=${to}.AIRPORT&departDate=${dDate}&stops=none&pageNo=1&adults=${passenger}&children=0%2C17&sort=CHEAPEST&cabinClass=ECONOMY&currency_code=JPY`
       }
     }
     const apiKey = process.env.RAPIDAPI_KEY
