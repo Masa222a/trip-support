@@ -35,9 +35,9 @@ export default function FavoritePage() {
         console.log(`--お気に入りのデータ:${JSON.stringify(favoriteData.data)}`)
         
         if (favoriteData.data) {
-          const favarites = favoriteData.data as unknown as FavoriteWithPost[]
-          setPosts(favarites)
-          const initialMemos = favarites.reduce((acc, item) => {
+          const favorites = favoriteData.data as unknown as FavoriteWithPost[]
+          setPosts(favorites)
+          const initialMemos = favorites.reduce((acc, item) => {
             if (item.Post) {
               acc[item.Post.id] = item.memo || ""
             }

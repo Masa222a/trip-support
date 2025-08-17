@@ -410,6 +410,7 @@ export default function FlightSearch() {
                             <p><strong>トータル:</strong> {segment.totalPrice}</p>
                             
                             <button 
+                              type="button"
                               onClick={() => openModal(segment)}
                               className="mt-4 px-2 py-2 bg-blue-200 border border-blue-300 text-blue-700 rounded hover:bg-blue-100 transition duration-150 focus:outline-none focus:ring-2 focus:ring-blue-400"
                               >
@@ -419,6 +420,7 @@ export default function FlightSearch() {
                             {status && 
                               <div className="flex justify-end mt-2 mb-4">
                                 <button
+                                  type="button"
                                   onClick={() => toggleFavorite(index)}
                                   className={`flex items-center gap-1 px-3 py-1 rounded transition-colors duration-200 ${
                                     segment.isFavorite ? 'bg-red-500 text-white' : 'bg-gray-200 text-gray-800'
