@@ -164,8 +164,10 @@ export default function FlightSearch() {
       const items = flightData.data.flightOffers || []
 
       const flightList:FlightListInterface[] = []
-      items.forEach((item) => {
-        item.segments.forEach((segment, segIndex: number) => {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+      items.forEach((item: any) => {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          item.segments.forEach((segment: any, segIndex: number) => {
           const durationSeconds = segment.totalTime || 0;
           const hours = Math.floor(durationSeconds / 3600);
           const minutes = Math.floor((durationSeconds % 3600) / 60);
