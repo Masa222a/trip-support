@@ -5,22 +5,20 @@ import Header from '../components/layouts/header/header';
 import { createClient } from "@/lib/supabase/client"
 import Image from "next/image"
 
-type Post = {
-  id: number
-  departure_point: string
-  flight_time: string
-  departure_at: string
-  arrival_at: string
-  arrival_point: string
-  base_price: string
-  logo_url: string
-  tax_price: string
-  total_price: string
-}
-
 type FavoriteWithPost = {
   memo: string
-  Post: Post
+  Post: {
+    id: number
+    departure_point: string
+    flight_time: string
+    departure_at: string
+    arrival_at: string
+    arrival_point: string
+    base_price: string
+    logo_url: string
+    tax_price: string
+    total_price: string
+  }
 }
 
 export default function FavoritePage() {
@@ -37,8 +35,9 @@ export default function FavoritePage() {
         console.log(`--お気に入りのデータ:${JSON.stringify(favoriteData.data)}`)
         
         if (favoriteData.data) {
-          setPosts(favoriteData.data as unknown as FavoriteWithPost[])
-          const initialMemos = favoriteData.data.reduce((acc, item) => {
+          const favarites = favoriteData.data as unknown as FavoriteWithPost[]
+          setPosts(favarites)
+          const initialMemos = favarites.reduce((acc, item) => {
             if (item.Post) {
               acc[item.Post.id] = item.memo || ""
             }
@@ -52,7 +51,7 @@ export default function FavoritePage() {
       }
     })()
   }, [])
-  
+
   const handleDelete = async (id: number) => {
     const confirmed = window.confirm("本当に削除しますか？")
     if (!confirmed) return;

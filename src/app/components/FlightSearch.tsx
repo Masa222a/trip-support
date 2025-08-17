@@ -393,7 +393,6 @@ export default function FlightSearch() {
                     <h2 className="text-xl font-bold">検索結果</h2>
 
                     {tripType === "oneway" && (
-                      // 片道 → 現状のまま
                       result.map((res, index) => {
                         const segment = res;
                         if (!segment) return null;
@@ -463,19 +462,6 @@ export default function FlightSearch() {
                                       <p><strong>所要時間:</strong> {res.duration}</p>
                                       <p><strong>料金:</strong> {res.totalPrice}円</p>
 
-                                      {/* お気に入りボタン */}
-                                      {status && (
-                                        <div className="flex justify-end mt-3">
-                                          <button
-                                            onClick={() => toggleFavorite(globalIndex)}
-                                            className={`px-3 py-1 rounded ${
-                                              res.isFavorite ? 'bg-red-500 text-white' : 'bg-gray-200 text-gray-800'
-                                            }`}
-                                          >
-                                            Favorite
-                                          </button>
-                                        </div>
-                                      )}
                                     </div>
                                   );
                                 })}
