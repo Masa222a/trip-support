@@ -135,18 +135,19 @@ export default function FlightSearch() {
     setResult([])
     console.log(passenger)
     let url = ""
-    if (departureDate && returnDate) {
+    if (departureDate) {
       const dDate = departureDate.toISOString().split("T")[0];
-      const rDate = returnDate.toISOString().split("T")[0];
+      url = `https://booking-com15.p.rapidapi.com/api/v1/flights/searchFlights?fromId=${from}.AIRPORT&toId=${to}.AIRPORT&departDate=${dDate}&stops=none&pageNo=1&adults=${passenger}&children=0%2C17&sort=CHEAPEST&cabinClass=ECONOMY&currency_code=JPY`
       
-      if (tripType == 'round') {
+      if (returnDate) {
+        const rDate = returnDate.toISOString().split("T")[0];
         url = `https://booking-com15.p.rapidapi.com/api/v1/flights/searchFlights?fromId=${from}.AIRPORT&toId=${to}.AIRPORT&departDate=${dDate}&returnDate=${rDate}&stops=none&pageNo=1&adults=${passenger}&children=0%2C17&sort=CHEAPEST&cabinClass=ECONOMY&currency_code=JPY`
-      } else {
-        url = `https://booking-com15.p.rapidapi.com/api/v1/flights/searchFlights?fromId=${from}.AIRPORT&toId=${to}.AIRPORT&departDate=${dDate}&stops=none&pageNo=1&adults=${passenger}&children=0%2C17&sort=CHEAPEST&cabinClass=ECONOMY&currency_code=JPY`
       }
     }
-    const apiKey = process.env.RAPIDAPI_KEY
-    const host = process.env.RAPIDAPI_HOST
+    const apiKey = process.env.NEXT_PUBLIC_RAPIDAPI_KEY
+    const host = process.env.NEXT_PUBLIC_RAPIDAPI_HOST
+    console.log(apiKey)
+    console.log(host)
 
     const options = {
       method: 'GET',
@@ -157,8 +158,8 @@ export default function FlightSearch() {
     }
     
     try {
-      const res = await fetch(url, options);
-      const flightData = await res.json();
+      const res = await fetch(url, options)
+      const flightData = await res.json()
 
       const items = flightData.data.flightOffers || []
 
