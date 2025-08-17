@@ -27,7 +27,7 @@ import { FlightListInterface } from '@/types/FlightList'
 import Image from 'next/image'
 import { createClient } from "@/lib/supabase/client"
 import Header from "./layouts/header/header"
-import flightData from '../../../data/flightData'
+// import flightData from '../../../data/flightData'
 import FlightDetailModal from "./FlightDetailModal";
 
 export default function FlightSearch() {
@@ -134,36 +134,35 @@ export default function FlightSearch() {
     setLoading(true)
     setResult([])
     console.log(passenger)
-    // let url = ""
-    // if (departureDate && returnDate) {
-    //   const dDate = departureDate.toISOString().split("T")[0];
-    //   const rDate = returnDate.toISOString().split("T")[0];
+    let url = ""
+    if (departureDate && returnDate) {
+      const dDate = departureDate.toISOString().split("T")[0];
+      const rDate = returnDate.toISOString().split("T")[0];
       
-    //   if (tripType == 'round') {
-    //     url = `https://booking-com15.p.rapidapi.com/api/v1/flights/searchFlights?fromId=${from}.AIRPORT&toId=${to}.AIRPORT&departDate=${dDate}&returnDate=${rDate}&stops=none&pageNo=1&adults=${passenger}&children=0%2C17&sort=CHEAPEST&cabinClass=ECONOMY&currency_code=JPY`;
-    //   } else {
-    //     url = `https://booking-com15.p.rapidapi.com/api/v1/flights/searchFlights?fromId=${from}.AIRPORT&toId=${to}.AIRPORT&departDate=${dDate}&stops=none&pageNo=1&adults=${passenger}&children=0%2C17&sort=CHEAPEST&cabinClass=ECONOMY&currency_code=JPY`;
-    //   }
-    // }
-    // const apiKey = process.env.RAPIDAPI_KEY
-    // const host = process.env.RAPIDAPI_HOST
+      if (tripType == 'round') {
+        url = `https://booking-com15.p.rapidapi.com/api/v1/flights/searchFlights?fromId=${from}.AIRPORT&toId=${to}.AIRPORT&departDate=${dDate}&returnDate=${rDate}&stops=none&pageNo=1&adults=${passenger}&children=0%2C17&sort=CHEAPEST&cabinClass=ECONOMY&currency_code=JPY`;
+      } else {
+        url = `https://booking-com15.p.rapidapi.com/api/v1/flights/searchFlights?fromId=${from}.AIRPORT&toId=${to}.AIRPORT&departDate=${dDate}&stops=none&pageNo=1&adults=${passenger}&children=0%2C17&sort=CHEAPEST&cabinClass=ECONOMY&currency_code=JPY`;
+      }
+    }
+    const apiKey = process.env.RAPIDAPI_KEY
+    const host = process.env.RAPIDAPI_HOST
 
-    // const options = {
-    //   method: 'GET',
-    //   headers: {
-    //     'X-RapidAPI-Key': apiKey!,
-    //     'X-RapidAPI-Host': host!
-    //   }
-    // }
+    const options = {
+      method: 'GET',
+      headers: {
+        'X-RapidAPI-Key': apiKey!,
+        'X-RapidAPI-Host': host!
+      }
+    }
     
     try {
-      // const res = await fetch(url, options);
-      // const flightData = await res.json();
+      const res = await fetch(url, options);
+      const flightData = await res.json();
 
       const items = flightData.data.flightOffers || []
 
       const flightList:FlightListInterface[] = []
-      // typeやモデルを定義して、それを元にデータの受け渡しを行う
       items.forEach((item) => {
         item.segments.forEach((segment, segIndex: number) => {
           const durationSeconds = segment.totalTime || 0;
