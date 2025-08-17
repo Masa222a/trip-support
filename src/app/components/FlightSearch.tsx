@@ -450,7 +450,6 @@ export default function FlightSearch() {
                               <h3 className="font-bold text-lg mb-4">往復セット {setIndex + 1}</h3>
                               <div className="grid md:grid-cols-2 gap-4">
                                 {pair.flights.map((res, idx) => {
-                                  const globalIndex = pair.startIndex + idx
                                   return (
                                     <div key={idx} className="border rounded p-4 bg-gray-50">
                                       <div className="flex items-center gap-3 mb-2">
