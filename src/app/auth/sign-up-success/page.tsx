@@ -1,7 +1,4 @@
-import {
-  Card,
-  CardContent,
-} from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import Link from "next/link";
 
 export default function Page() {
@@ -14,10 +11,7 @@ export default function Page() {
               <p className="text-sm mt-4 text-black-500">
                 ログインが完了しました。
               </p>
-              <Link 
-              className="text-sm text-blue-500"
-              href="/"
-              >
+              <Link className="text-sm text-blue-500" href="/">
                 Homeへ戻る
               </Link>
             </CardContent>

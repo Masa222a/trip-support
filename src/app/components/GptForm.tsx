@@ -1,30 +1,36 @@
-'use client'
+"use client";
 
-import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select"
-import { useState } from "react"
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from "@/components/ui/select";
+import { useState } from "react";
 
 export type GPTPrompt = {
-  location: string
-  duration: string
-  style: string
-}
+  location: string;
+  duration: string;
+  style: string;
+};
 
 type Props = {
-  onSubmit: (form: GPTPrompt) => void
-}
+  onSubmit: (form: GPTPrompt) => void;
+};
 
 export const GPTForm = ({ onSubmit }: Props) => {
-  const [location, setLocation] = useState("")
-  const [duration, setDuration] = useState("")
-  const [style, setStyle] = useState("")
+  const [location, setLocation] = useState("");
+  const [duration, setDuration] = useState("");
+  const [style, setStyle] = useState("");
 
   const handleSubmit = () => {
     if (location && duration && style) {
-      onSubmit({ location, duration, style })
+      onSubmit({ location, duration, style });
     } else {
-      alert("すべての項目を選択してください")
+      alert("すべての項目を選択してください");
     }
-  }
+  };
 
   return (
     <div className="space-y-4 max-w-2xl mx-auto p-6">
@@ -68,5 +74,5 @@ export const GPTForm = ({ onSubmit }: Props) => {
         🌍 プランを作成する
       </button>
     </div>
-  )
-}
+  );
+};

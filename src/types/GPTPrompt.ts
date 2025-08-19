@@ -1,10 +1,10 @@
 export type GptPlan = {
-  day: string
-  activities: string[]
-}
+  day: string;
+  activities: string[];
+};
 
 export type GPTPrompt = {
-  location: string
-  duration: string
-  style: string
-}
+  location: string;
+  duration: string;
+  style: string;
+};

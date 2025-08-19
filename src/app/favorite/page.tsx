@@ -1,97 +1,107 @@
-"use client"
+"use client";
 
-import { useEffect, useState } from 'react'
-import Header from '../components/layouts/header/header';
-import { createClient } from "@/lib/supabase/client"
-import Image from "next/image"
+import { useEffect, useState } from "react";
+import Header from "../components/layouts/header/header";
+import { createClient } from "@/lib/supabase/client";
+import Image from "next/image";
 
 type FavoriteWithPost = {
-  memo: string
+  memo: string;
   Post: {
-    id: number
-    departure_point: string
-    flight_time: string
-    departure_at: string
-    arrival_at: string
-    arrival_point: string
-    base_price: string
-    logo_url: string
-    tax_price: string
-    total_price: string
-  }
-}
+    id: number;
+    departure_point: string;
+    flight_time: string;
+    departure_at: string;
+    arrival_at: string;
+    arrival_point: string;
+    base_price: string;
+    logo_url: string;
+    tax_price: string;
+    total_price: string;
+  };
+};
 
 export default function FavoritePage() {
-  const [posts, setPosts] = useState<FavoriteWithPost[]>([])
-  const supabase = createClient()
+  const [posts, setPosts] = useState<FavoriteWithPost[]>([]);
+  const supabase = createClient();
   useEffect(() => {
-    (async() => {
-      const userData = await supabase.auth.getUser()
+    (async () => {
+      const userData = await supabase.auth.getUser();
       if (userData.data.user?.id) {
         const favoriteData = await supabase
-        .from("Favorite")
-        .select("memo, Post:post_id_arrival(id, departure_point, flight_time, departure_at, arrival_at, arrival_point, base_price, logo_url, tax_price, total_price)")
-        .eq("user_id", userData.data.user?.id)
-        console.log(`--お気に入りのデータ:${JSON.stringify(favoriteData.data)}`)
-        
+          .from("Favorite")
+          .select(
+            "memo, Post:post_id_arrival(id, departure_point, flight_time, departure_at, arrival_at, arrival_point, base_price, logo_url, tax_price, total_price)",
+          )
+          .eq("user_id", userData.data.user?.id);
+        console.log(
+          `--お気に入りのデータ:${JSON.stringify(favoriteData.data)}`,
+        );
+
         if (favoriteData.data) {
-          const favorites = favoriteData.data as unknown as FavoriteWithPost[]
-          setPosts(favorites)
-          const initialMemos = favorites.reduce((acc, item) => {
-            if (item.Post) {
-              acc[item.Post.id] = item.memo || ""
-            }
-            return acc
-          }, {} as Record<number, string>)
-          setMemos(initialMemos)
+          const favorites = favoriteData.data as unknown as FavoriteWithPost[];
+          setPosts(favorites);
+          const initialMemos = favorites.reduce(
+            (acc, item) => {
+              if (item.Post) {
+                acc[item.Post.id] = item.memo || "";
+              }
+              return acc;
+            },
+            {} as Record<number, string>,
+          );
+          setMemos(initialMemos);
         } else {
-          setPosts([])
-          setMemos({})
+          setPosts([]);
+          setMemos({});
         }
       }
-    })()
-  }, [])
+    })();
+  }, []);
 
   const handleDelete = async (id: number) => {
-    const confirmed = window.confirm("本当に削除しますか？")
+    const confirmed = window.confirm("本当に削除しますか？");
     if (!confirmed) return;
-  
+
     const { error } = await supabase
       .from("Favorite")
       .delete()
-      .eq("post_id_arrival", id)
-  
+      .eq("post_id_arrival", id);
+
     if (!error) {
-      setPosts((prev) => prev.filter((item) => item.Post.id !== id))
+      setPosts((prev) => prev.filter((item) => item.Post.id !== id));
     } else {
-      alert("削除に失敗しました")
+      alert("削除に失敗しました");
     }
   };
 
   const [memos, setMemos] = useState(
-    posts.reduce((acc, item) => {
-      acc[item.Post.id] = item.memo || ""
-      return acc
-    }, {} as Record<string, string>)
-  )
+    posts.reduce(
+      (acc, item) => {
+        acc[item.Post.id] = item.memo || "";
+        return acc;
+      },
+      {} as Record<string, string>,
+    ),
+  );
 
   const handleMemoChange = (postId: number, value: string) => {
-    setMemos((prev) => ({ ...prev, [postId]: value }))
-  }
+    setMemos((prev) => ({ ...prev, [postId]: value }));
+  };
 
   const handleSaveMemo = async (postId: number) => {
     const { error } = await supabase
       .from("Favorite")
       .update({ memo: memos[postId] })
-      .eq("post_id_arrival", postId)
+      .eq("post_id_arrival", postId);
 
     if (error) {
-      console.error("メモ保存エラー:", error)
-      alert("メモ保存に失敗しました")
+      console.error("メモ保存エラー:", error);
+      alert("メモ保存に失敗しました");
     } else {
-      alert("メモを保存しました")
+      alert("メモを保存しました");
     }
-  }
+  };
 
   return (
     <div className="px-4">
@@ -120,14 +130,16 @@ export default function FavoritePage() {
               />
             )}
           </div>
-  
+
           <div className="grid grid-cols-2 gap-y-2 text-sm text-gray-700">
             <div className="font-medium">ベース価格:</div>
             <div>¥{item.Post.base_price}</div>
             <div className="font-medium">税金:</div>
             <div>¥{item.Post.tax_price}</div>
             <div className="font-medium">トータル価格:</div>
-            <div className="text-red-600 font-bold">¥{item.Post.total_price}</div>
+            <div className="text-red-600 font-bold">
+              ¥{item.Post.total_price}
+            </div>
           </div>
 
           <div className="mt-4">
@@ -159,5 +171,5 @@ export default function FavoritePage() {
         </div>
       ))}
     </div>
-  )
+  );
 }

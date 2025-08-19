@@ -1,9 +1,5 @@
-"use client"
-import {
-  Tabs,
-  TabsList,
-  TabsTrigger,
-} from "@/components/ui/tabs";
+"use client";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import {
@@ -20,196 +16,200 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import React, { useEffect, useState } from "react";
-import { format } from "date-fns"
+import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
-import dayjs from 'dayjs';
-import { FlightListInterface } from '@/types/FlightList'
-import Image from 'next/image'
-import { createClient } from "@/lib/supabase/client"
-import Header from "./layouts/header/header"
+import dayjs from "dayjs";
+import { FlightListInterface } from "@/types/FlightList";
+import Image from "next/image";
+import { createClient } from "@/lib/supabase/client";
+import Header from "./layouts/header/header";
 // import flightData from '../../../data/flightData'
 import FlightDetailModal from "./FlightDetailModal";
 
 export default function FlightSearch() {
-  const [tripType, setTripType] = useState("round")
-  const [departureDate, setDepartureDate] = useState<Date>()
-  const [returnDate, setReturnDate] = useState<Date>()
-  const [from, setFrom] = useState<string>()
-  const [to, setTo] = useState<string>()
+  const [tripType, setTripType] = useState("round");
+  const [departureDate, setDepartureDate] = useState<Date>();
+  const [returnDate, setReturnDate] = useState<Date>();
+  const [from, setFrom] = useState<string>();
+  const [to, setTo] = useState<string>();
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<FlightListInterface[]>([]);
-  const [status, setStatus] = useState("")
-  const [tokens, setToken] = useState<string[]>([])
-  const [passenger, setPassenger] = useState("1")
+  const [status, setStatus] = useState("");
+  const [tokens, setToken] = useState<string[]>([]);
+  const [passenger, setPassenger] = useState("1");
   const [modalIsOpen, setModalIsOpen] = useState(false);
-  const [selectedFlight, setSelectedFlight] = useState<FlightListInterface | null>(null)
+  const [selectedFlight, setSelectedFlight] =
+    useState<FlightListInterface | null>(null);
 
-  const supabase = createClient()
+  const supabase = createClient();
   useEffect(() => {
-    (async() => {
-      const { data } = await supabase.auth.getUser()
+    (async () => {
+      const { data } = await supabase.auth.getUser();
       if (data.user != null) {
-        setStatus(data.user.id)
+        setStatus(data.user.id);
         const favData = await supabase
-        .from("Favorite")
-        .select("*")
-        .eq("user_id", data.user.id)
-        .not('token', 'is', null)
+          .from("Favorite")
+          .select("*")
+          .eq("user_id", data.user.id)
+          .not("token", "is", null);
         if (favData.data != null) {
           const tokenArray = favData.data
-          .filter(item => item.token)
-          .map(item => item.token);
-          setToken(tokenArray)
+            .filter((item) => item.token)
+            .map((item) => item.token);
+          setToken(tokenArray);
         } else {
-          setToken([])
+          setToken([]);
         }
       } else {
-        setStatus("")
+        setStatus("");
       }
-
-
-    })()
-  }, [])
+    })();
+  }, []);
 
   const toggleFavorite = async (id: number) => {
-    setResult(result.map((res, index) => {
-      if (id == index) {
-        return {
-          ...res,
-          isFavorite: !res.isFavorite
+    setResult(
+      result.map((res, index) => {
+        if (id == index) {
+          return {
+            ...res,
+            isFavorite: !res.isFavorite,
+          };
+        } else {
+          return res;
         }
-      } else {
-        return res
-      }
-    }))
+      }),
+    );
 
-    const { data } = await supabase.auth.getUser()
+    const { data } = await supabase.auth.getUser();
     if (data.user != null) {
       const postData = await supabase
-      .from('Post')
-      .insert({
-        user_id: data.user.id,
-        departure_point: result[id].departureAirport,
-        arrival_point: result[id].arrivalAirport,
-        flight_time: result[id].duration,
-        total_price: result[id].totalPrice,
-        logo_url: result[id].logoUrl,
-        tax_price: result[id].taxPrice,
-        base_price: result[id].basePrice,
-        departure_at: result[id].departureTime,
-        arrival_at: result[id].arrivalTime
-      })
-      .select()
-      
-      if (postData.data != null) {
-        await supabase
-        .from('Favorite')
+        .from("Post")
         .insert({
+          user_id: data.user.id,
+          departure_point: result[id].departureAirport,
+          arrival_point: result[id].arrivalAirport,
+          flight_time: result[id].duration,
+          total_price: result[id].totalPrice,
+          logo_url: result[id].logoUrl,
+          tax_price: result[id].taxPrice,
+          base_price: result[id].basePrice,
+          departure_at: result[id].departureTime,
+          arrival_at: result[id].arrivalTime,
+        })
+        .select();
+
+      if (postData.data != null) {
+        await supabase.from("Favorite").insert({
           user_id: data.user.id,
           post_id_arrival: postData.data[0].id,
           post_id_departure: null,
-          token: result[id].token
-        })
+          token: result[id].token,
+        });
       } else {
-        console.log('postDataがnullです。')
+        console.log("postDataがnullです。");
       }
     } else {
-      alert('ログインしてからご利用ください。')
+      alert("ログインしてからご利用ください。");
     }
   };
 
   const handleDepartureDateSelect = (departureDate: Date | undefined) => {
-    if (!departureDate) return
-    
-    setDepartureDate(departureDate)
-  }
+    if (!departureDate) return;
+
+    setDepartureDate(departureDate);
+  };
 
   const handleReturnDateSelect = (returnDate: Date | undefined) => {
-    if (!returnDate) return
+    if (!returnDate) return;
 
-    setReturnDate(returnDate)
+    setReturnDate(returnDate);
   };
 
   const callAPI = async () => {
-    setLoading(true)
-    setResult([])
-    console.log(passenger)
-    let url = ""
+    setLoading(true);
+    setResult([]);
+    console.log(passenger);
+    let url = "";
     if (departureDate) {
       const dDate = departureDate.toISOString().split("T")[0];
-      url = `https://booking-com15.p.rapidapi.com/api/v1/flights/searchFlights?fromId=${from}.AIRPORT&toId=${to}.AIRPORT&departDate=${dDate}&stops=none&pageNo=1&adults=${passenger}&children=0%2C17&sort=CHEAPEST&cabinClass=ECONOMY&currency_code=JPY`
-      
+      url = `https://booking-com15.p.rapidapi.com/api/v1/flights/searchFlights?fromId=${from}.AIRPORT&toId=${to}.AIRPORT&departDate=${dDate}&stops=none&pageNo=1&adults=${passenger}&children=0%2C17&sort=CHEAPEST&cabinClass=ECONOMY&currency_code=JPY`;
+
       if (returnDate) {
         const rDate = returnDate.toISOString().split("T")[0];
-        url = `https://booking-com15.p.rapidapi.com/api/v1/flights/searchFlights?fromId=${from}.AIRPORT&toId=${to}.AIRPORT&departDate=${dDate}&returnDate=${rDate}&stops=none&pageNo=1&adults=${passenger}&children=0%2C17&sort=CHEAPEST&cabinClass=ECONOMY&currency_code=JPY`
+        url = `https://booking-com15.p.rapidapi.com/api/v1/flights/searchFlights?fromId=${from}.AIRPORT&toId=${to}.AIRPORT&departDate=${dDate}&returnDate=${rDate}&stops=none&pageNo=1&adults=${passenger}&children=0%2C17&sort=CHEAPEST&cabinClass=ECONOMY&currency_code=JPY`;
       }
     }
-    const apiKey = process.env.NEXT_PUBLIC_RAPIDAPI_KEY
-    const host = process.env.NEXT_PUBLIC_RAPIDAPI_HOST
-    console.log(apiKey)
-    console.log(host)
+    const apiKey = process.env.NEXT_PUBLIC_RAPIDAPI_KEY;
+    const host = process.env.NEXT_PUBLIC_RAPIDAPI_HOST;
+    console.log(apiKey);
+    console.log(host);
 
     const options = {
-      method: 'GET',
+      method: "GET",
       headers: {
-        'X-RapidAPI-Key': apiKey!,
-        'X-RapidAPI-Host': host!
-      }
-    }
-    
+        "X-RapidAPI-Key": apiKey!,
+        "X-RapidAPI-Host": host!,
+      },
+    };
+
     try {
-      const res = await fetch(url, options)
-      const flightData = await res.json()
+      const res = await fetch(url, options);
+      const flightData = await res.json();
 
-      const items = flightData.data.flightOffers || []
+      const items = flightData.data.flightOffers || [];
 
-      const flightList:FlightListInterface[] = []
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const flightList: FlightListInterface[] = [];
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       items.forEach((item: any) => {
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          item.segments.forEach((segment: any, segIndex: number) => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        item.segments.forEach((segment: any, segIndex: number) => {
           const durationSeconds = segment.totalTime || 0;
           const hours = Math.floor(durationSeconds / 3600);
           const minutes = Math.floor((durationSeconds % 3600) / 60);
-          const duration = `${hours}時間${minutes}分`
+          const duration = `${hours}時間${minutes}分`;
           const logo = segment.legs[0].carriersData[0].logo;
           // cSpell:ignore traveller
-          const totalPrice = item.travellerPrices?.[0].travellerPriceBreakdown?.total.units.toLocaleString()
-          const basePrice =  item.travellerPrices?.[0].travellerPriceBreakdown?.baseFare.units.toLocaleString()
-          const taxPrice =  item.travellerPrices?.[0].travellerPriceBreakdown?.tax.units.toLocaleString()
-          const isFavorite = tokens.includes(item.token)
+          const totalPrice =
+            item.travellerPrices?.[0].travellerPriceBreakdown?.total.units.toLocaleString();
+          const basePrice =
+            item.travellerPrices?.[0].travellerPriceBreakdown?.baseFare.units.toLocaleString();
+          const taxPrice =
+            item.travellerPrices?.[0].travellerPriceBreakdown?.tax.units.toLocaleString();
+          const isFavorite = tokens.includes(item.token);
 
           flightList.push({
             id: segIndex,
-            departureAirport: segment.departureAirport?.name || '不明',
-            arrivalAirport: segment.arrivalAirport?.name || '不明',
-            departureTime: dayjs(segment.departureTime).format('YYYY/MM/DD HH:mm'),
-            arrivalTime: dayjs(segment.arrivalTime).format('YYYY/MM/DD HH:mm'),
+            departureAirport: segment.departureAirport?.name || "不明",
+            arrivalAirport: segment.arrivalAirport?.name || "不明",
+            departureTime: dayjs(segment.departureTime).format(
+              "YYYY/MM/DD HH:mm",
+            ),
+            arrivalTime: dayjs(segment.arrivalTime).format("YYYY/MM/DD HH:mm"),
             duration: duration,
             logoUrl: logo,
             totalPrice: totalPrice,
             basePrice: basePrice,
             taxPrice: taxPrice,
             isFavorite: isFavorite,
-            token: item.token
-          })
-        })
-      })
+            token: item.token,
+          });
+        });
+      });
 
-      setResult(flightList)
+      setResult(flightList);
     } catch (error) {
-      console.error("API error:", error)
+      console.error("API error:", error);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   const handlePassengers = (p: string) => {
-    setPassenger(p)
-  }
+    setPassenger(p);
+  };
 
   const openModal = (flight: FlightListInterface) => {
-    console.log(`flight: ${JSON.stringify(flight)}`)
+    console.log(`flight: ${JSON.stringify(flight)}`);
     // const detailFlight = JSON.stringify(flight)
     setSelectedFlight(flight);
     setModalIsOpen(true);
@@ -226,8 +226,12 @@ export default function FlightSearch() {
       <div className="relative bg-cover bg-center min-h-[70vh]">
         <div className="absolute inset-0 bg-black/50" />
         <div className="relative z-10 flex flex-col items-center justify-center text-white text-center px-4 py-20">
-          <h1 className="text-3xl md:text-5xl font-bold mb-4">最安値で航空券を予約</h1>
-          <p className="text-lg md:text-xl font-light">簡単・手軽にチケットを検索</p>
+          <h1 className="text-3xl md:text-5xl font-bold mb-4">
+            最安値で航空券を予約
+          </h1>
+          <p className="text-lg md:text-xl font-light">
+            簡単・手軽にチケットを検索
+          </p>
         </div>
 
         {/* フォームセクション */}
@@ -243,7 +247,9 @@ export default function FlightSearch() {
                 {/* 出発地と目的地 */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                   <div>
-                    <Label htmlFor="from" className="text-gray-700">出発地</Label>
+                    <Label htmlFor="from" className="text-gray-700">
+                      出発地
+                    </Label>
                     <select
                       id="from"
                       name="from"
@@ -272,7 +278,9 @@ export default function FlightSearch() {
                   </div>
 
                   <div>
-                    <Label htmlFor="to" className="text-gray-700">目的地</Label>
+                    <Label htmlFor="to" className="text-gray-700">
+                      目的地
+                    </Label>
                     <select
                       id="to"
                       name="to"
@@ -304,28 +312,36 @@ export default function FlightSearch() {
                 {/* 日付と人数 */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
                   <div>
-                    <Label htmlFor="departure-date" className="text-gray-700">出発日</Label>
+                    <Label htmlFor="departure-date" className="text-gray-700">
+                      出発日
+                    </Label>
                     <Popover>
                       <PopoverTrigger asChild>
                         {/* departureDateがからでなければ日付を表示 */}
-                        <Button variant="outline" className="w-full mt-1 text-left">
+                        <Button
+                          variant="outline"
+                          className="w-full mt-1 text-left"
+                        >
                           <CalendarIcon className="mr-2 h-4 w-4" />
                           {departureDate ? (
-                            format(departureDate, 'yyyy/MM/dd')
-                          ): (
+                            format(departureDate, "yyyy/MM/dd")
+                          ) : (
                             <span>日付を選択</span>
                           )}
                         </Button>
                       </PopoverTrigger>
                       <PopoverContent className="w-auto p-0">
                         <div className="sm:flex">
-                          <Calendar 
+                          <Calendar
                             mode="single"
                             selected={departureDate}
                             onSelect={handleDepartureDateSelect}
                             initialFocus
-                            disabled={(departureDate) => departureDate < new Date()}
-                            className="rounded-md border" />
+                            disabled={(departureDate) =>
+                              departureDate < new Date()
+                            }
+                            className="rounded-md border"
+                          />
                         </div>
                       </PopoverContent>
                     </Popover>
@@ -333,36 +349,44 @@ export default function FlightSearch() {
 
                   {tripType == "round" && (
                     <div>
-                    <Label htmlFor="departure-date" className="text-gray-700">帰国日</Label>
-                    <Popover>
-                      <PopoverTrigger asChild>
-                        {/* departureDateがからでなければ日付を表示 */}
-                        <Button variant="outline" className="w-full mt-1 text-left">
-                          <CalendarIcon className="mr-2 h-4 w-4" />
-                          {returnDate ? (
-                            format(returnDate, 'yyyy/MM/dd')
-                          ): (
-                            <span>日付を選択</span>
-                          )}
-                        </Button>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-auto p-0">
-                        <div className="sm:flex">
-                          <Calendar 
-                            mode="single"
-                            selected={returnDate}
-                            onSelect={handleReturnDateSelect}
-                            initialFocus
-                            disabled={(returnDate) => returnDate < new Date()}
-                            className="rounded-md border" />
-                        </div>
-                      </PopoverContent>
-                    </Popover>
-                  </div>
+                      <Label htmlFor="departure-date" className="text-gray-700">
+                        帰国日
+                      </Label>
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          {/* departureDateがからでなければ日付を表示 */}
+                          <Button
+                            variant="outline"
+                            className="w-full mt-1 text-left"
+                          >
+                            <CalendarIcon className="mr-2 h-4 w-4" />
+                            {returnDate ? (
+                              format(returnDate, "yyyy/MM/dd")
+                            ) : (
+                              <span>日付を選択</span>
+                            )}
+                          </Button>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-auto p-0">
+                          <div className="sm:flex">
+                            <Calendar
+                              mode="single"
+                              selected={returnDate}
+                              onSelect={handleReturnDateSelect}
+                              initialFocus
+                              disabled={(returnDate) => returnDate < new Date()}
+                              className="rounded-md border"
+                            />
+                          </div>
+                        </PopoverContent>
+                      </Popover>
+                    </div>
                   )}
 
                   <div>
-                    <Label htmlFor="passengers" className="text-gray-700">搭乗者数</Label>
+                    <Label htmlFor="passengers" className="text-gray-700">
+                      搭乗者数
+                    </Label>
                     <Select onValueChange={handlePassengers} defaultValue="1">
                       <SelectTrigger className="w-full mt-1">
                         <SelectValue placeholder="搭乗者数を選択" />
@@ -378,104 +402,180 @@ export default function FlightSearch() {
                 </div>
 
                 {/* 検索ボタン */}
-                <Button 
+                <Button
                   type="button"
-                  disabled={loading} 
+                  disabled={loading}
                   className="w-full bg-blue-600 hover:bg-blue-700 text-white text-lg"
                   onClick={() => {
-                      callAPI()
-                  }}>
-                    {loading ? "検索中..." : "検索する"}
+                    callAPI();
+                  }}
+                >
+                  {loading ? "検索中..." : "検索する"}
                 </Button>
                 {loading && !result && (
-                  <p className="text-gray-600 text-center mt-4">フライトを検索中です...</p>
+                  <p className="text-gray-600 text-center mt-4">
+                    フライトを検索中です...
+                  </p>
                 )}
                 {!loading && result.length > 0 && (
                   <div className="mt-6 space-y-6">
                     <h2 className="text-xl font-bold">検索結果</h2>
 
-                    {tripType === "oneway" && (
+                    {tripType === "oneway" &&
                       result.map((res, index) => {
                         const segment = res;
                         if (!segment) return null;
                         return (
-                          <div key={index} className="border rounded p-4 shadow">
-                            {segment.logoUrl ?
-                              <Image src={segment.logoUrl} width={50} height={50} alt="logo" /> :
+                          <div
+                            key={index}
+                            className="border rounded p-4 shadow"
+                          >
+                            {segment.logoUrl ? (
+                              <Image
+                                src={segment.logoUrl}
+                                width={50}
+                                height={50}
+                                alt="logo"
+                              />
+                            ) : (
                               "不明"
-                            }
-                            <p><strong>出発地:</strong> {segment.departureAirport}</p>
-                            <p><strong>到着地:</strong> {segment.arrivalAirport}</p>
-                            <p><strong>出発時刻:</strong> {segment.departureTime}</p>
-                            <p><strong>到着時刻:</strong> {segment.arrivalTime}</p>
-                            <p><strong>フライト時間:</strong> {segment.duration}</p>
-                            <p><strong>トータル:</strong> {segment.totalPrice}</p>
-                            
-                            <button 
+                            )}
+                            <p>
+                              <strong>出発地:</strong>{" "}
+                              {segment.departureAirport}
+                            </p>
+                            <p>
+                              <strong>到着地:</strong> {segment.arrivalAirport}
+                            </p>
+                            <p>
+                              <strong>出発時刻:</strong> {segment.departureTime}
+                            </p>
+                            <p>
+                              <strong>到着時刻:</strong> {segment.arrivalTime}
+                            </p>
+                            <p>
+                              <strong>フライト時間:</strong> {segment.duration}
+                            </p>
+                            <p>
+                              <strong>トータル:</strong> {segment.totalPrice}
+                            </p>
+
+                            <button
                               type="button"
                               onClick={() => openModal(segment)}
                               className="mt-4 px-2 py-2 bg-blue-200 border border-blue-300 text-blue-700 rounded hover:bg-blue-100 transition duration-150 focus:outline-none focus:ring-2 focus:ring-blue-400"
-                              >
+                            >
                               詳細を見る
                             </button>
-                          
-                            {status && 
+
+                            {status && (
                               <div className="flex justify-end mt-2 mb-4">
                                 <button
                                   type="button"
                                   onClick={() => toggleFavorite(index)}
                                   className={`flex items-center gap-1 px-3 py-1 rounded transition-colors duration-200 ${
-                                    segment.isFavorite ? 'bg-red-500 text-white' : 'bg-gray-200 text-gray-800'
+                                    segment.isFavorite
+                                      ? "bg-red-500 text-white"
+                                      : "bg-gray-200 text-gray-800"
                                   }`}
                                 >
                                   Favorite
                                 </button>
                               </div>
-                            }
+                            )}
                           </div>
                         );
-                      })
-                    )}
+                      })}
 
                     {tripType === "round" && (
                       <div className="space-y-6">
-                        {result.reduce((pairs: { flights: FlightListInterface[], startIndex: number }[], _, i) => {
-                          if (i % 2 === 0) pairs.push({ flights: result.slice(i, i + 2), startIndex: i });
-                          return pairs;
-                        }, []).map((pair, setIndex) => {
-                          // 合計金額計算
-                          const totalSum = pair.flights.reduce((sum, flight) => {
-                            const price = flight.totalPrice ? parseInt(flight.totalPrice.replace(/,/g, "")) : 0;
-                            return sum + price;
-                          }, 0);
-                          
-                          return (
-                            <div key={setIndex} className="border rounded-lg p-4 shadow bg-white">
-                              <h3 className="font-bold text-lg mb-4">往復セット {setIndex + 1}</h3>
-                              <div className="grid md:grid-cols-2 gap-4">
-                                {pair.flights.map((res, idx) => {
-                                  return (
-                                    <div key={idx} className="border rounded p-4 bg-gray-50">
-                                      <div className="flex items-center gap-3 mb-2">
-                                        <Image src={res.logoUrl || "/no-logo.png"} width={40} height={40} alt="logo" />
-                                        <p className="font-semibold">{res.departureAirport} → {res.arrivalAirport}</p>
-                                      </div>
-                                      <p><strong>出発:</strong> {res.departureTime}</p>
-                                      <p><strong>到着:</strong> {res.arrivalTime}</p>
-                                      <p><strong>所要時間:</strong> {res.duration}</p>
-                                      <p><strong>料金:</strong> {res.totalPrice}円</p>
+                        {result
+                          .reduce(
+                            (
+                              pairs: {
+                                flights: FlightListInterface[];
+                                startIndex: number;
+                              }[],
+                              _,
+                              i,
+                            ) => {
+                              if (i % 2 === 0)
+                                pairs.push({
+                                  flights: result.slice(i, i + 2),
+                                  startIndex: i,
+                                });
+                              return pairs;
+                            },
+                            [],
+                          )
+                          .map((pair, setIndex) => {
+                            // 合計金額計算
+                            const totalSum = pair.flights.reduce(
+                              (sum, flight) => {
+                                const price = flight.totalPrice
+                                  ? parseInt(
+                                      flight.totalPrice.replace(/,/g, ""),
+                                    )
+                                  : 0;
+                                return sum + price;
+                              },
+                              0,
+                            );
 
-                                    </div>
-                                  );
-                                })}
+                            return (
+                              <div
+                                key={setIndex}
+                                className="border rounded-lg p-4 shadow bg-white"
+                              >
+                                <h3 className="font-bold text-lg mb-4">
+                                  往復セット {setIndex + 1}
+                                </h3>
+                                <div className="grid md:grid-cols-2 gap-4">
+                                  {pair.flights.map((res, idx) => {
+                                    return (
+                                      <div
+                                        key={idx}
+                                        className="border rounded p-4 bg-gray-50"
+                                      >
+                                        <div className="flex items-center gap-3 mb-2">
+                                          <Image
+                                            src={res.logoUrl || "/no-logo.png"}
+                                            width={40}
+                                            height={40}
+                                            alt="logo"
+                                          />
+                                          <p className="font-semibold">
+                                            {res.departureAirport} →{" "}
+                                            {res.arrivalAirport}
+                                          </p>
+                                        </div>
+                                        <p>
+                                          <strong>出発:</strong>{" "}
+                                          {res.departureTime}
+                                        </p>
+                                        <p>
+                                          <strong>到着:</strong>{" "}
+                                          {res.arrivalTime}
+                                        </p>
+                                        <p>
+                                          <strong>所要時間:</strong>{" "}
+                                          {res.duration}
+                                        </p>
+                                        <p>
+                                          <strong>料金:</strong>{" "}
+                                          {res.totalPrice}円
+                                        </p>
+                                      </div>
+                                    );
+                                  })}
+                                </div>
+                                {/* 合計金額表示 */}
+                                <p className="mt-4 text-right font-bold text-lg">
+                                  往復合計: {totalSum.toLocaleString()}円
+                                </p>
                               </div>
-                              {/* 合計金額表示 */}
-                              <p className="mt-4 text-right font-bold text-lg">
-                                往復合計: {totalSum.toLocaleString()}円
-                              </p>
-                            </div>
-                          );
-                        })}
+                            );
+                          })}
                       </div>
                     )}
                     <FlightDetailModal
@@ -491,5 +591,5 @@ export default function FlightSearch() {
         </div>
       </div>
     </div>
-  )
+  );
 }
