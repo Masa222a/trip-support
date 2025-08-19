@@ -34,9 +34,6 @@ export default function FavoritePage() {
             "memo, Post:post_id_arrival(id, departure_point, flight_time, departure_at, arrival_at, arrival_point, base_price, logo_url, tax_price, total_price)",
           )
           .eq("user_id", userData.data.user?.id);
-        console.log(
-          `--お気に入りのデータ:${JSON.stringify(favoriteData.data)}`,
-        );
 
         if (favoriteData.data) {
           const favorites = favoriteData.data as unknown as FavoriteWithPost[];

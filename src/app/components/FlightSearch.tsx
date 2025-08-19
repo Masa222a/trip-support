@@ -105,8 +105,6 @@ export default function FlightSearch() {
           post_id_departure: null,
           token: result[id].token,
         });
-      } else {
-        console.log("postDataがnullです。");
       }
     } else {
       alert("ログインしてからご利用ください。");
@@ -128,7 +126,6 @@ export default function FlightSearch() {
   const callAPI = async () => {
     setLoading(true);
     setResult([]);
-    console.log(passenger);
     let url = "";
     if (departureDate) {
       const dDate = departureDate.toISOString().split("T")[0];
@@ -141,8 +138,6 @@ export default function FlightSearch() {
     }
     const apiKey = process.env.NEXT_PUBLIC_RAPIDAPI_KEY;
     const host = process.env.NEXT_PUBLIC_RAPIDAPI_HOST;
-    console.log(apiKey);
-    console.log(host);
 
     const options = {
       method: "GET",
@@ -209,8 +204,6 @@ export default function FlightSearch() {
   };
 
   const openModal = (flight: FlightListInterface) => {
-    console.log(`flight: ${JSON.stringify(flight)}`);
-    // const detailFlight = JSON.stringify(flight)
     setSelectedFlight(flight);
     setModalIsOpen(true);
   };
