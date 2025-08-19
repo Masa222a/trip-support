@@ -1,6 +1,6 @@
 # trip support
 
-公開URL:()<br/>
+公開URL:https://trip-support-prpduct.vercel.app/<br/>
 デモアカウント（すぐに試せます）<br/>
 Email:spotide.demo.test@gmail.com<br/>
 Password:testtest
