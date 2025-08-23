@@ -7,13 +7,8 @@ import {
   SelectContent,
   SelectItem,
 } from "@/components/ui/select";
+import { GPTPrompt } from "@/types/GPTPrompt";
 import { useState } from "react";
-
-export type GPTPrompt = {
-  location: string;
-  duration: string;
-  style: string;
-};
 
 type Props = {
   onSubmit: (form: GPTPrompt) => void;
@@ -76,3 +71,4 @@ export const GPTForm = ({ onSubmit }: Props) => {
     </div>
   );
 };
+export type { GPTPrompt };

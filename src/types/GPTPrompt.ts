@@ -8,3 +8,7 @@ export type GPTPrompt = {
   duration: string;
   style: string;
 };
+
+export type TravelPlanProps = {
+  plan: GptPlan[];
+};

@@ -4,22 +4,7 @@ import { useEffect, useState } from "react";
 import Header from "../components/layouts/header/header";
 import { createClient } from "@/lib/supabase/client";
 import Image from "next/image";
-
-type FavoriteWithPost = {
-  memo: string;
-  Post: {
-    id: number;
-    departure_point: string;
-    flight_time: string;
-    departure_at: string;
-    arrival_at: string;
-    arrival_point: string;
-    base_price: string;
-    logo_url: string;
-    tax_price: string;
-    total_price: string;
-  };
-};
+import { FavoriteWithPost } from "@/types/FavoriteWithPost";
 
 export default function FavoritePage() {
   const [posts, setPosts] = useState<FavoriteWithPost[]>([]);
@@ -80,11 +65,11 @@ export default function FavoritePage() {
       },
       {} as Record<string, string>,
     ),
-  );
+  )
 
   const handleMemoChange = (postId: number, value: string) => {
     setMemos((prev) => ({ ...prev, [postId]: value }));
-  };
+  }
 
   const handleSaveMemo = async (postId: number) => {
     const { error } = await supabase

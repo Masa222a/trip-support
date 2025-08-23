@@ -152,6 +152,7 @@ export default function FlightSearch() {
       const flightData = await res.json();
 
       const items = flightData.data.flightOffers || [];
+      console.log(JSON.stringify(items))
 
       const flightList: FlightListInterface[] = [];
       // eslint-disable-next-line @typescript-eslint/no-explicit-any

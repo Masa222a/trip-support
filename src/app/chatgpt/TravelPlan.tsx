@@ -1,15 +1,7 @@
 "use client";
 
+import { TravelPlanProps } from "@/types/GPTPrompt";
 import React from "react";
-
-type GptPlan = {
-  day: string;
-  activities: string[];
-};
-
-type TravelPlanProps = {
-  plan: GptPlan[];
-};
 
 export const TravelPlan: React.FC<TravelPlanProps> = ({ plan }) => {
   if (!plan || plan.length === 0) {

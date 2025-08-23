@@ -4,11 +4,7 @@ import { useState } from "react";
 import { GPTForm, GPTPrompt } from "../components/GptForm";
 import { TravelPlan } from "./TravelPlan";
 import Header from "../components/layouts/header/header";
-
-type GptPlan = {
-  day: string;
-  activities: string[];
-};
+import { GptPlan } from "@/types/GPTPrompt";
 
 const ChatgptPage = () => {
   const [plan, setPlan] = useState<GptPlan[]>([]);
