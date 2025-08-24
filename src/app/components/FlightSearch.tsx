@@ -25,6 +25,7 @@ import { createClient } from "@/lib/supabase/client";
 import Header from "./layouts/header/header";
 // import flightData from '../../../data/flightData'
 import FlightDetailModal from "./FlightDetailModal";
+import { airports } from "@/types/airports";
 
 export default function FlightSearch() {
   const [tripType, setTripType] = useState("round");
@@ -152,7 +153,6 @@ export default function FlightSearch() {
       const flightData = await res.json();
 
       const items = flightData.data.flightOffers || [];
-      console.log(JSON.stringify(items))
 
       const flightList: FlightListInterface[] = [];
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -246,28 +246,16 @@ export default function FlightSearch() {
                     </Label>
                     <select
                       id="from"
-                      name="from"
-                      className="mt-1 border rounded p-2 w-full"
-                      required
                       value={from}
                       onChange={(e) => setFrom(e.target.value)}
+                      className="mt-1 border rounded p-2 w-full"
                     >
                       <option value="">空港を選択してください</option>
-                      <option value="HND">羽田空港 (東京) - HND</option>
-                      <option value="NRT">成田国際空港 (千葉) - NRT</option>
-                      <option value="KIX">関西国際空港 (大阪) - KIX</option>
-                      <option value="ITM">大阪国際空港（伊丹）- ITM</option>
-                      <option value="NGO">中部国際空港 (愛知) - NGO</option>
-                      <option value="CTS">新千歳空港 (北海道) - CTS</option>
-                      <option value="SDJ">仙台空港 (宮城) - SDJ</option>
-                      <option value="FUK">福岡空港 (福岡) - FUK</option>
-                      <option value="OKA">那覇空港 (沖縄) - OKA</option>
-                      <option value="KOJ">鹿児島空港 (鹿児島) - KOJ</option>
-                      <option value="HIJ">広島空港 (広島) - HIJ</option>
-                      <option value="TAK">高松空港 (香川) - TAK</option>
-                      <option value="MYJ">松山空港 (愛媛) - MYJ</option>
-                      <option value="KMJ">熊本空港 (熊本) - KMJ</option>
-                      <option value="KMQ">小松空港 (石川) - KMQ</option>
+                      {airports.map(({ code, name }) => (
+                        <option key={code} value={code}>
+                          {name} - {code}
+                        </option>
+                      ))}
                     </select>
                   </div>
 
@@ -277,28 +265,17 @@ export default function FlightSearch() {
                     </Label>
                     <select
                       id="to"
-                      name="to"
                       className="mt-1 border rounded p-2 w-full"
                       required
                       value={to}
                       onChange={(e) => setTo(e.target.value)}
                     >
                       <option value="">空港を選択してください</option>
-                      <option value="HND">羽田空港 (東京) - HND</option>
-                      <option value="NRT">成田国際空港 (千葉) - NRT</option>
-                      <option value="KIX">関西国際空港 (大阪) - KIX</option>
-                      <option value="ITM">大阪国際空港（伊丹）- ITM</option>
-                      <option value="NGO">中部国際空港 (愛知) - NGO</option>
-                      <option value="CTS">新千歳空港 (北海道) - CTS</option>
-                      <option value="SDJ">仙台空港 (宮城) - SDJ</option>
-                      <option value="FUK">福岡空港 (福岡) - FUK</option>
-                      <option value="OKA">那覇空港 (沖縄) - OKA</option>
-                      <option value="KOJ">鹿児島空港 (鹿児島) - KOJ</option>
-                      <option value="HIJ">広島空港 (広島) - HIJ</option>
-                      <option value="TAK">高松空港 (香川) - TAK</option>
-                      <option value="MYJ">松山空港 (愛媛) - MYJ</option>
-                      <option value="KMJ">熊本空港 (熊本) - KMJ</option>
-                      <option value="KMQ">小松空港 (石川) - KMQ</option>
+                      {airports.map(({ code, name }) => (
+                        <option key={code} value={code}>
+                          {name} - {code}
+                        </option>
+                      ))}
                     </select>
                   </div>
                 </div>

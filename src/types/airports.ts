@@ -1,0 +1,17 @@
+export const airports = [
+  { code: "HND", name: "羽田空港 (東京)" },
+  { code: "NRT", name: "成田国際空港 (千葉)" },
+  { code: "KIX", name: "関西国際空港 (大阪)" },
+  { code: "ITM", name: "大阪国際空港（伊丹）" },
+  { code: "NGO", name: "中部国際空港 (愛知)" },
+  { code: "CTS", name: "新千歳空港 (北海道)" },
+  { code: "SDJ", name: "仙台空港 (宮城)" },
+  { code: "FUK", name: "福岡空港 (福岡)" },
+  { code: "OKA", name: "那覇空港 (沖縄)" },
+  { code: "KOJ", name: "鹿児島空港 (鹿児島)" },
+  { code: "HIJ", name: "広島空港 (広島)" },
+  { code: "TAK", name: "高松空港 (香川)" },
+  { code: "MYJ", name: "松山空港 (愛媛)" },
+  { code: "KMJ", name: "熊本空港 (熊本)" },
+  { code: "KMQ", name: "小松空港 (石川)" },
+]
